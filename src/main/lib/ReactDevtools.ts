@@ -4,24 +4,12 @@ import os from 'os';
 import fs from 'fs';
 import path from 'path';
 
-/**
- * React Devtools の場所を探す関数
- */
-export const searchReactDevtools = async () => {
-  const isWin32 = os.platform() === 'win32';
-  const isDarwin = os.platform() === 'darwin';
+import { session } from 'electron';
 
-  const reactDevtools = '/Default/Extensions/fmkadmapgofadopljbjfkapdkoienihi';
+import { reactDevtools, extDir } from './Const';
 
-  const extDir = isDarwin
-    ? // macOS
-      '/Library/Application Support/Google/Chrome'
-    : isWin32
-    ? // Windows
-      '/AppData/Local/Google/Chrome/User Data'
-    : // Linux
-      '/.config/google-chrome';
-
+// React Devtools の場所を探す関数
+const searchReactDevtools = async () => {
   // React Devtools フォルダの絶対パス
   const dirPath = path.join(os.homedir(), extDir, reactDevtools);
 
@@ -34,4 +22,17 @@ export const searchReactDevtools = async () => {
         .shift()
     )
     .catch((err) => console.log(`Error: ${err}`));
+};
+
+// React Devtools を起動する関数
+export const bootReactDevtools = async () => {
+  const extPath = await searchReactDevtools();
+  if (extPath) {
+    await session.defaultSession
+      .loadExtension(extPath, {
+        allowFileAccess: true,
+      })
+      .then(() => console.log('React Devtools loaded...'))
+      .catch((err) => console.log(err));
+  }
 };

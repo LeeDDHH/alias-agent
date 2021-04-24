@@ -1,11 +1,11 @@
+'use strict';
+
 import path from 'path';
 import { BrowserWindow, screen } from 'electron';
 
-export let mainWindow: any;
+export let mainWindow: BrowserWindow;
 
-/**
- * BrowserWindowインスタンスを作成する関数
- */
+//BrowserWindowインスタンスを作成する関数
 export const createWindow = () => {
   const display = screen.getPrimaryDisplay();
 
