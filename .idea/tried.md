@@ -57,3 +57,12 @@ yarn -D add rimraf cross-env npm-run-all
   - [reactjs - Create-react-app + TypeScript + CSS Modules: Auto-generating type definitions without ejecting from CRA - Stack Overflow](https://stackoverflow.com/questions/58380082/create-react-app-typescript-css-modules-auto-generating-type-definitions-wi)
   - [mrmckeb/typescript-plugin-css-modules: A TypeScript language service plugin providing support for CSS Modules.](https://github.com/mrmckeb/typescript-plugin-css-modules)
   - [TypeScript + React JSX + CSS Modules で実現するタイプセーフなWeb開発 - Qiita](https://qiita.com/Quramy/items/a5d8967cdbd1b8575130)
+
+## Trayのアイコンをパス指定で読み込む
+
+- `import` で画像を読み込み、`nativeImage.createFromPath` とか `nativeImage.createFromDataURL` とかで画像を指定しようとしたら、空の画像で表示された
+  - `console.log` で読み込み時の状況を確認しようとしたが、どうやら[NativeImageのインスタンスをconsole.logで出力すると、空のオブジェクトに表示される](https://stackoverflow.com/questions/57303551/electron-returns-empty-nativeimage-when-im-trying-to-read-image-from-clipboard)らしく、 `console` だとあまり参考にならなかった
+- `import` で読み込んだ画像を `nativeImage` でインスタンス化して空だったら、イメージを直接パス指定した画像を読み込むようにしたら、Trayに画像が表示された
+  - ただ、このやり方だとバンドル時に画像を `dist` 配下に置くためのだけに `import` 文で読み込ませる必要があったため、いい方法ではなかった
+- `webpack` でバンドル時に `copy-webpack-plugin` を使って、必要なソースごと `dist` 配下にコピーすることで、直接パスを指定しながら必要なソースも参照できるようにした
+  - [書いたソースコードの例](https://github.com/LeeDDHH/alias-agent/commit/51a34deb6c51cd03ad8a00aa68af1babddf0035a)
