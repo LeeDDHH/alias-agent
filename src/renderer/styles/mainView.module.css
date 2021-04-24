@@ -1,0 +1,13 @@
+.height100 {
+  height: 100%;
+}
+
+.width100 {
+  width: 100%;
+}
+
+.font {
+  font-size: 40px;
+  line-height: 1.5;
+  text-indent: 0.3rem;
+}
