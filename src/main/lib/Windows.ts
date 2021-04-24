@@ -3,10 +3,10 @@
 import path from 'path';
 import { BrowserWindow, screen } from 'electron';
 
-export let mainWindow: BrowserWindow;
+let mainWindow: BrowserWindow;
 
 //BrowserWindowインスタンスを作成する関数
-export const createWindow = () => {
+const createWindow = () => {
   const display = screen.getPrimaryDisplay();
 
   const defaultWindowWidth = display.bounds.width / 5;
@@ -50,3 +50,5 @@ export const createWindow = () => {
   // レンダラープロセスをロード
   mainWindow.loadFile('dist/index.html');
 };
+
+export { mainWindow, createWindow };
