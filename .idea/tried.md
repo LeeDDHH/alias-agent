@@ -1,3 +1,33 @@
+## プロジェクトに必要なライブラリをインストールする
+```
+(ElectronとTypeSciprt関連)
+yarn -D add electron typescript ts-node @types/node
+
+(React)
+yarn add react react-dom
+(React型定義)
+yarn -D add @types/react @types/react-dom
+
+(ESLint と Prettier)
+yarn -D add eslint prettier eslint-config-prettier
+(TypeScript用ESLint)
+yarn -D add @typescript-eslint/parser @typescript-eslint/eslint-plugin
+(React関連プラグイン)
+yarn -D add eslint-plugin-react eslint-plugin-react-hooks
+
+(Webpack)
+yarn -D add webpack webpack-cli
+(Webpackローダー)
+yarn -D add ts-loader css-loader
+(プラグインとその型定義ファイル)
+yarn -D add mini-css-extract-plugin @types/mini-css-extract-plugin
+(バンドルされたJavaScriptファイルをHTMLの<script>タグに差し込むためのプラグイン)
+yarn -D add html-webpack-plugin
+
+(ユーティリティ)
+yarn -D add rimraf cross-env npm-run-all
+```
+
 ## TypeScript に書いた CSS Module がバンドルされたら読み込めなかった
 
 - `typescript-plugin-css-modules` パッケージを導入して試す
