@@ -5,11 +5,16 @@ import { Configuration } from 'webpack';
 
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
+import CopyPlugin from 'copy-webpack-plugin';
 
 const isDev = process.env.NODE_ENV === 'development';
 
 /** 共通設定 */
 import base from './.config/webpack.base';
+
+const copy = new CopyPlugin({
+  patterns: [{ from: 'src/images', to: './images' }],
+});
 
 // メインプロセス用の設定
 const main: Configuration = {
@@ -19,6 +24,7 @@ const main: Configuration = {
   entry: {
     main: './src/main/main.ts',
   },
+  plugins: [copy],
 };
 
 // プリロード・スクリプト用の設定

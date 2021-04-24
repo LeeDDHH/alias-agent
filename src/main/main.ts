@@ -9,6 +9,7 @@ import { app } from 'electron';
 import { bootReactDevtools } from './lib/ReactDevtools';
 import './ipc/ipcActions';
 import { mainWindow, createWindow } from './lib/Windows';
+import { tray, createTray } from './lib/Tray';
 
 /**
  * アプリを起動する準備が完了したら BrowserWindow インスタンスを作成し、
@@ -20,6 +21,7 @@ app.whenReady().then(() => {
 
   // BrowserWindow インスタンスを作成
   createWindow();
+  createTray();
 });
 
 // すべてのウィンドウが閉じられたらアプリを終了する
