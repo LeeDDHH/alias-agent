@@ -66,3 +66,4 @@ yarn -D add rimraf cross-env npm-run-all
   - ただ、このやり方だとバンドル時に画像を `dist` 配下に置くためのだけに `import` 文で読み込ませる必要があったため、いい方法ではなかった
 - `webpack` でバンドル時に `copy-webpack-plugin` を使って、必要なソースごと `dist` 配下にコピーすることで、直接パスを指定しながら必要なソースも参照できるようにした
   - [書いたソースコードの例](https://github.com/LeeDDHH/alias-agent/commit/51a34deb6c51cd03ad8a00aa68af1babddf0035a)
+  - [コピーにひらめいた記事](https://dev.to/franamorim/tutorial-alarm-widget-with-electron-react-2-34dd)
