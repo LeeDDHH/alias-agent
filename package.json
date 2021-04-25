@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "dist/main.js",
   "scripts": {
-    "dev": "concurrently --success first \"yarn dev:build-react-server\" \"yarn dev:start\" -kr",
+    "dev": "run-p dev:build-react-server dev:start",
     "dev:build-react-server": "cross-env NODE_ENV=\"development\" webpack-cli serve --config ./.config/webpack.react.ts",
     "dev:start": "run-s clean typed-css dev:build serve",
     "dev:build": "cross-env NODE_ENV=\"development\" webpack --progress",
@@ -24,7 +24,6 @@
     "@types/webpack-dev-server": "^3.11.3",
     "@typescript-eslint/eslint-plugin": "^4.22.0",
     "@typescript-eslint/parser": "^4.22.0",
-    "concurrently": "^6.0.2",
     "copy-webpack-plugin": "^8.1.1",
     "cross-env": "^7.0.3",
     "css-loader": "^5.2.4",
