@@ -1,6 +1,7 @@
 'use strict';
 
 import path from 'path';
+import url from 'url';
 import { BrowserWindow, screen } from 'electron';
 
 import { bootReactDevtools } from './ReactDevtools';
@@ -55,7 +56,17 @@ const createWindow = async () => {
   }
 
   // レンダラープロセスをロード
-  mainWindow.loadFile('dist/index.html');
+  if (process.env.NODE_ENV === 'development') {
+    mainWindow.loadURL(`http://localhost:4000`);
+  } else {
+    mainWindow.loadURL(
+      url.format({
+        pathname: path.join(__dirname, 'index.html'),
+        protocol: 'file:',
+        slashes: true,
+      })
+    );
+  }
 };
 
 export { mainWindow, createWindow };

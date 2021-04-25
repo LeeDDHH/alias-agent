@@ -60,8 +60,10 @@ const renderer: Configuration = {
   ],
 };
 
+const exportArray = isDev ? [main, preload] : [main, preload, renderer];
+
 /**
  * メイン，プリロード，レンダラーそれぞれの設定を
  * 配列に入れてエクスポート
  */
-export default [main, preload, renderer];
+export default exportArray;
