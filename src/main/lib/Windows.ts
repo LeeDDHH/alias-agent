@@ -3,10 +3,12 @@
 import path from 'path';
 import { BrowserWindow, screen } from 'electron';
 
+import { bootReactDevtools } from './ReactDevtools';
+
 let mainWindow: BrowserWindow;
 
 //BrowserWindowインスタンスを作成する関数
-const createWindow = () => {
+const createWindow = async () => {
   const display = screen.getPrimaryDisplay();
 
   const defaultWindowWidth = display.bounds.width / 5;
@@ -44,7 +46,12 @@ const createWindow = () => {
 
   // 開発時にはデベロッパーツールを開く
   if (process.env.NODE_ENV === 'development') {
-    mainWindow.webContents.openDevTools({ mode: 'detach' });
+    // 開発時には React Developer Tools をロードする
+    bootReactDevtools();
+
+    mainWindow.webContents.on('did-frame-finish-load', async () => {
+      mainWindow.webContents.openDevTools({ mode: 'detach' });
+    });
   }
 
   // レンダラープロセスをロード

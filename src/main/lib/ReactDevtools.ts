@@ -3,6 +3,9 @@
 import os from 'os';
 import fs from 'fs';
 import path from 'path';
+import installExtension, {
+  REACT_DEVELOPER_TOOLS,
+} from 'electron-devtools-installer';
 
 import { session } from 'electron';
 
@@ -24,10 +27,20 @@ const searchReactDevtools = async () => {
     .catch((err) => console.log(`Error: ${err}`));
 };
 
+// react developer toolsがローカルにない場合、インストールする
+const installDevExtension = async () => {
+  await installExtension(REACT_DEVELOPER_TOOLS)
+    .then((name) => console.log(`Added Extension:  ${name}`))
+    .catch((err) => console.log('An error occurred: ', err));
+};
+
 // React Devtools を起動する関数
 export const bootReactDevtools = async () => {
   const extPath = await searchReactDevtools();
-  if (extPath) {
+  if (!extPath) {
+    installDevExtension();
+    bootReactDevtools();
+  } else {
     await session.defaultSession
       .loadExtension(extPath, {
         allowFileAccess: true,

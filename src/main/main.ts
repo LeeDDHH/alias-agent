@@ -6,7 +6,6 @@ import fs from 'fs';
 import path from 'path';
  */
 import { app } from 'electron';
-import { bootReactDevtools } from './lib/ReactDevtools';
 import './ipc/ipcActions';
 import { mainWindow, createWindow } from './lib/Windows';
 import { tray, createTray } from './lib/Tray';
@@ -16,9 +15,6 @@ import { tray, createTray } from './lib/Tray';
  * レンダラープロセス（index.htmlとそこから呼ばれるスクリプト）をロードする
  */
 app.whenReady().then(() => {
-  // 開発時には React Developer Tools をロードする
-  if (process.env.NODE_ENV === 'development') bootReactDevtools();
-
   // BrowserWindow インスタンスを作成
   createWindow();
   createTray();
