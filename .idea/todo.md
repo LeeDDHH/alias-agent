@@ -1,0 +1,3 @@
+- [spectron](https://www.electronjs.org/spectron)もしくは[単体テストの例](https://www.electronjs.org/docs/development/testing)をもとに、テストを導入する
+- React側のテストコードを追加する
+- [storybook](https://storybook.js.org/)でUIコンポーネントの管理/テストの構造を作る
