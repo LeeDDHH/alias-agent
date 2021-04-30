@@ -16,13 +16,19 @@ yarn -D add @typescript-eslint/parser @typescript-eslint/eslint-plugin
 yarn -D add eslint-plugin-react eslint-plugin-react-hooks
 
 (Webpack)
-yarn -D add webpack webpack-cli
+yarn -D add webpack webpack-cli webpack-dev-server @types/webpack-dev-server
 (Webpackローダー)
 yarn -D add ts-loader css-loader
 (プラグインとその型定義ファイル)
-yarn -D add mini-css-extract-plugin @types/mini-css-extract-plugin
+yarn -D add mini-css-extract-plugin copy-webpack-plugin @types/mini-css-extract-plugin @types/copy-webpack-plugin
 (バンドルされたJavaScriptファイルをHTMLの<script>タグに差し込むためのプラグイン)
-yarn -D add html-webpack-plugin
+yarn -D add html-webpack-plugin @types/html-webpack-plugin
+
+(CSSリセッター)
+yarn add reseter.css
+
+(Electron devtools関連)
+yarn -D add electron-devtools-installer
 
 (ユーティリティ)
 yarn -D add rimraf cross-env npm-run-all
