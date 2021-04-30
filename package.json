@@ -1,7 +1,7 @@
 {
   "name": "alias-agent-react",
   "version": "1.0.0",
-  "main": "dist/main.js",
+  "main": "dist/main/main.js",
   "scripts": {
     "dev": "run-p dev:build-react-server dev:start",
     "dev:build-react-server": "cross-env NODE_ENV=\"development\" webpack-cli serve --config ./.config/webpack.react.ts",

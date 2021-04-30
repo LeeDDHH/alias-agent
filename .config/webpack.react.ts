@@ -8,15 +8,20 @@ import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import base from './webpack.base';
 
 // レンダラープロセス用の設定
-const renderer: Configuration = {
+const mainView: Configuration = {
   ...base,
   // セキュリティ対策として 'electron-renderer' ターゲットは使用しない
   target: 'web',
   entry: {
-    renderer: './src/renderer/renderer.tsx',
+    mainView: './src/renderer/mainView/renderer.tsx',
+  },
+  output: {
+    ...base.output,
+    // バンドルファイルの出力先（ここではプロジェクト直下の 'dist' ディレクトリ）
+    path: path.resolve(__dirname, '../dist/renderer/mainView'),
   },
   devServer: {
-    contentBase: path.join(__dirname, '../dist'),
+    contentBase: path.join(__dirname, '../dist/renderer/mainView'),
     historyApiFallback: true,
     compress: true,
     hot: true,
@@ -29,7 +34,7 @@ const renderer: Configuration = {
      * HTMLファイルを出力するプラグイン
      */
     new HtmlWebpackPlugin({
-      template: './src/renderer/index.html',
+      template: './src/renderer/mainView/index.html',
       minify: true,
       inject: 'body',
       filename: 'index.html',
@@ -38,4 +43,5 @@ const renderer: Configuration = {
     new MiniCssExtractPlugin(),
   ],
 };
-export default renderer;
+
+export default mainView;

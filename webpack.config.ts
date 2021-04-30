@@ -24,6 +24,10 @@ const main: Configuration = {
   entry: {
     main: './src/main/main.ts',
   },
+  output: {
+    ...base.output,
+    path: path.resolve(__dirname, 'dist/main'),
+  },
   plugins: [copy],
 };
 
@@ -34,15 +38,23 @@ const preload: Configuration = {
   entry: {
     preload: './src/main/preload.ts',
   },
+  output: {
+    ...base.output,
+    path: path.resolve(__dirname, 'dist/main'),
+  },
 };
 
 // レンダラープロセス用の設定
-const renderer: Configuration = {
+const mainView: Configuration = {
   ...base,
   // セキュリティ対策として 'electron-renderer' ターゲットは使用しない
   target: 'web',
   entry: {
-    renderer: './src/renderer/renderer.tsx',
+    mainView: './src/renderer/mainView/renderer.tsx',
+  },
+  output: {
+    ...base.output,
+    path: path.resolve(__dirname, 'dist/renderer/mainView'),
   },
   plugins: [
     /**
@@ -50,7 +62,7 @@ const renderer: Configuration = {
      * HTMLファイルを出力するプラグイン
      */
     new HtmlWebpackPlugin({
-      template: './src/renderer/index.html',
+      template: './src/renderer/mainView/index.html',
       minify: !isDev,
       inject: 'body',
       filename: 'index.html',
@@ -60,7 +72,7 @@ const renderer: Configuration = {
   ],
 };
 
-const exportArray = isDev ? [main, preload] : [main, preload, renderer];
+const exportArray = isDev ? [main, preload] : [main, preload, mainView];
 
 /**
  * メイン，プリロード，レンダラーそれぞれの設定を
