@@ -13,7 +13,7 @@ const mainView: Configuration = {
   // セキュリティ対策として 'electron-renderer' ターゲットは使用しない
   target: 'web',
   entry: {
-    mainView: './src/renderer/mainView/renderer.tsx',
+    mainView: './src/renderer/mainView/index.tsx',
   },
   output: {
     ...base.output,

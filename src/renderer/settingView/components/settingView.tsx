@@ -6,18 +6,14 @@ const MainView = () => {
   const [input, setInput] = useState('');
   const [message, setMessage] = useState<string | null>('');
 
-  useEffect(() => {
-    //   const handleMessage = (event, message) => setMessage(message)
-    //   window.ipcApi.on('message', handleMessage)
-    //   return () => {
-    //     window.ipcRenderer.removeListener('message', handleMessage)
-    //   }
-    window.ipcApi.handleInitInputValue(resetInput);
-  }, []);
+  // useEffect(() => {
+  //   const handleMessage = (event, message) => setMessage(message)
+  //   window.ipcApi.on('message', handleMessage)
 
-  const resetInput = () => {
-    setInput('');
-  };
+  //   return () => {
+  //     window.ipcRenderer.removeListener('message', handleMessage)
+  //   }
+  // }, [])
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();

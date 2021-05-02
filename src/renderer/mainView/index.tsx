@@ -8,7 +8,7 @@ cssリセッター
 https://github.com/krishdevdb/reseter.css
 */
 import 'reseter.css/css/reseter.min.css';
-import './styles/app.module.css';
+import '../styles/app.module.css';
 
 const App: React.FC = () => <MainView />;
 

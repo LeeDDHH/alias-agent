@@ -47,7 +47,7 @@ yarn global add typed-css-modules
 │   │   └── terminal16x16.png
 │   ├── main
 │   │   ├── ipc
-│   │   │   └── ipcActions.ts
+│   │   │   └── ipcMainActions.ts
 │   │   ├── lib
 │   │   │   ├── Const.ts
 │   │   │   ├── ReactDevtools.ts

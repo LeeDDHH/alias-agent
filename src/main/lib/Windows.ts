@@ -7,9 +7,9 @@ import { BrowserWindow, screen } from 'electron';
 import { bootReactDevtools } from './ReactDevtools';
 
 let mainWindow: BrowserWindow;
+let settingWindow: BrowserWindow;
 
-//BrowserWindowインスタンスを作成する関数
-const createWindow = async () => {
+const _createMainWindow = async () => {
   const display = screen.getPrimaryDisplay();
 
   const defaultWindowWidth = display.bounds.width / 5;
@@ -45,23 +45,67 @@ const createWindow = async () => {
     },
   });
 
-  // 開発時にはデベロッパーツールを開く
-  if (process.env.NODE_ENV === 'development') {
-    // 開発時には React Developer Tools をロードする
-    bootReactDevtools();
+  mainWindow.hide();
+  // mainWindow.once('ready-to-show', () => mainWindow.hide());
+};
 
-    mainWindow.webContents.on('did-frame-finish-load', async () => {
-      mainWindow.webContents.openDevTools({ mode: 'detach' });
-    });
-  }
+const _createSettingWindow = async () => {
+  settingWindow = new BrowserWindow({
+    width: 800,
+    height: 600,
+    resizable: false,
+    fullscreenable: false,
+    webPreferences: {
+      /**
+       * BrowserWindowインスタンス（レンダラープロセス）では
+       * Node.jsの機能を無効化する（electron@8以降でデフォルト）
+       */
+      nodeIntegration: false,
+      /**
+       * メインプロセスとレンダラープロセスとの間で
+       * コンテキストを共有しない (electron@11以降でデフォルト)
+       */
+      contextIsolation: true,
+      /**
+       * Preloadスクリプト
+       * webpack.config.js で 'node.__dirname: false' を
+       * 指定していればパスを取得できる
+       */
+      preload: path.join(__dirname, 'preload.js'),
+    },
+  });
+  settingWindow.hide();
+};
 
+const _bootReactDev = async () => {
+  // 開発時には React Developer Tools をロードする
+  await bootReactDevtools();
+
+  mainWindow.webContents.on('did-frame-finish-load', async () => {
+    mainWindow.webContents.openDevTools({ mode: 'detach' });
+    settingWindow.webContents.openDevTools({ mode: 'detach' });
+  });
+};
+
+const _loadRendererProcess = async () => {
   // レンダラープロセスをロード
   if (process.env.NODE_ENV === 'development') {
-    mainWindow.loadURL(`http://localhost:4000`);
+    await mainWindow.loadURL(`http://localhost:4000`);
+    await settingWindow.loadURL(`http://localhost:4001`);
   } else {
-    mainWindow.loadURL(
+    await mainWindow.loadURL(
       url.format({
         pathname: path.join(__dirname, '../renderer/mainView/index.html'),
+        protocol: 'file:',
+        slashes: true,
+      })
+    );
+    await settingWindow.loadURL(
+      url.format({
+        pathname: path.join(
+          __dirname,
+          '../renderer/settingViewView/index.html'
+        ),
         protocol: 'file:',
         slashes: true,
       })
@@ -69,4 +113,27 @@ const createWindow = async () => {
   }
 };
 
-export { mainWindow, createWindow };
+//BrowserWindowインスタンスを作成する関数
+const createWindow = async () => {
+  await _createMainWindow();
+  await _createSettingWindow();
+
+  // 開発時にはデベロッパーツールを開く
+  if (process.env.NODE_ENV === 'development') await _bootReactDev();
+
+  await _loadRendererProcess();
+};
+
+const destroyWindow = () => {
+  if (!mainWindow.isDestroyed) return mainWindow.destroy();
+};
+
+const mainViewToggle = () => {
+  if (mainWindow.isFocused()) {
+    mainWindow.webContents.send('initInputValue');
+    return mainWindow.hide();
+  }
+  mainWindow.show();
+};
+
+export { mainWindow, createWindow, destroyWindow, mainViewToggle };
