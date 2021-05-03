@@ -6,8 +6,8 @@
 
 |         |         |
 | ------- | ------- |
-| node.js | 12.21.0 |
-| npm     | 6.14.11 |
+| node.js | 14.15.4 |
+| npm     | 7.5.4   |
 | yarn    | 1.22.4  |
 
 ## 実行コマンド
@@ -19,9 +19,6 @@ nodebrew での方法を記載
 ```zsh
 nodebrew install-binary 12.21.0
 nodebrew use 12.21.0
-
-(CSS ModuleのDefinitly Typedファイル生成のためのコマンドをグローバルインストールする)
-yarn global add typed-css-modules
 ```
 
 [TypeScript + React JSX + CSS Modules で実現するタイプセーフな Web 開発](https://qiita.com/Quramy/items/a5d8967cdbd1b8575130)
