@@ -5,6 +5,7 @@ import url from 'url';
 import { BrowserWindow, screen } from 'electron';
 
 import { bootReactDevtools } from './ReactDevtools';
+import { _mainWindowsEvents } from './WindowsEvents';
 
 let mainWindow: BrowserWindow;
 let settingWindow: BrowserWindow;
@@ -117,6 +118,7 @@ const _loadRendererProcess = async () => {
 const createWindow = async () => {
   await _createMainWindow();
   await _createSettingWindow();
+  _mainWindowsEvents();
 
   // 開発時にはデベロッパーツールを開く
   if (process.env.NODE_ENV === 'development') await _bootReactDev();
