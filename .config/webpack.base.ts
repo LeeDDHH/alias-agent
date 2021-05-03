@@ -4,7 +4,7 @@ import { Configuration } from 'webpack';
 
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 
-const isDev = process.env.NODE_ENV === 'development';
+import { isDev } from '../src/main/lib/Const';
 
 /** 共通設定 */
 const base: Configuration = {

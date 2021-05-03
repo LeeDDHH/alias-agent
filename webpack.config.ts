@@ -7,7 +7,7 @@ import HtmlWebpackPlugin from 'html-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import CopyPlugin from 'copy-webpack-plugin';
 
-const isDev = process.env.NODE_ENV === 'development';
+import { isDev } from './src/main/lib/Const';
 
 /** 共通設定 */
 import base from './.config/webpack.base';

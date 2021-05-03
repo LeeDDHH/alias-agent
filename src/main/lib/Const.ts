@@ -2,6 +2,7 @@ import os from 'os';
 
 const isWin32 = os.platform() === 'win32';
 const isDarwin = os.platform() === 'darwin';
+const isDev = process.env.NODE_ENV === 'development';
 const reactDevtools = '/Default/Extensions/fmkadmapgofadopljbjfkapdkoienihi';
 const extDir = isDarwin
   ? // macOS
@@ -12,4 +13,4 @@ const extDir = isDarwin
   : // Linux
     '/.config/google-chrome';
 
-export { reactDevtools, extDir };
+export { isDev, reactDevtools, extDir };

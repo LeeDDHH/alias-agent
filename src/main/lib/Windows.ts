@@ -6,6 +6,7 @@ import { BrowserWindow, screen } from 'electron';
 
 import { bootReactDevtools } from './ReactDevtools';
 import { _mainWindowsEvents } from './WindowsEvents';
+import { isDev } from './Const';
 
 let mainWindow: BrowserWindow;
 let settingWindow: BrowserWindow;
@@ -90,7 +91,7 @@ const _bootReactDev = async () => {
 
 const _loadRendererProcess = async () => {
   // レンダラープロセスをロード
-  if (process.env.NODE_ENV === 'development') {
+  if (isDev) {
     await mainWindow.loadURL(`http://localhost:4000`);
     await settingWindow.loadURL(`http://localhost:4001`);
   } else {
@@ -121,7 +122,7 @@ const createWindow = async () => {
   _mainWindowsEvents();
 
   // 開発時にはデベロッパーツールを開く
-  if (process.env.NODE_ENV === 'development') await _bootReactDev();
+  if (isDev) await _bootReactDev();
 
   await _loadRendererProcess();
 };
