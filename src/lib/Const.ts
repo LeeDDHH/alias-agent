@@ -12,7 +12,9 @@ const extDir = isDarwin
     '/AppData/Local/Google/Chrome/User Data'
   : // Linux
     '/.config/google-chrome';
-const trayImage = 'src/images/terminal16x16.png';
+const trayImage = isDev
+  ? 'src/images/terminal16x16.png'
+  : 'dist/main/images/terminal16x16.png';
 const defaultMainViewToggleShortcut = 'Control+Space';
 
 export {

@@ -109,10 +109,7 @@ const _loadRendererProcess = async () => {
     );
     await settingWindow.loadURL(
       url.format({
-        pathname: path.join(
-          __dirname,
-          '../renderer/settingViewView/index.html'
-        ),
+        pathname: path.join(__dirname, '../renderer/settingView/index.html'),
         protocol: 'file:',
         slashes: true,
       })
