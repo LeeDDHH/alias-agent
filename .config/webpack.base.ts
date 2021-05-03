@@ -4,7 +4,7 @@ import { Configuration } from 'webpack';
 
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 
-import { isDev } from '../src/main/lib/Const';
+import { isDev } from '../src/lib/Const';
 
 /** 共通設定 */
 const base: Configuration = {

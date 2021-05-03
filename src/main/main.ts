@@ -6,18 +6,19 @@ import fs from 'fs';
 import path from 'path';
  */
 import { app } from 'electron';
-import { destroyWindow, createWindow } from './lib/Windows';
-import { tray, createTray } from './lib/Tray';
+import { destroyWindow, createWindow } from './components/windows/Windows';
+import { tray, createTray } from './components/tray/Tray';
 import './ipc/ipcMainActions';
-import './lib/GlobalShortcut';
+import './components/globalShortcuts/GlobalShortcut';
 
+app.dock.hide();
 /**
  * アプリを起動する準備が完了したら BrowserWindow インスタンスを作成し、
  * レンダラープロセス（index.htmlとそこから呼ばれるスクリプト）をロードする
  */
-app.whenReady().then(() => {
+app.whenReady().then(async () => {
   // BrowserWindow インスタンスを作成
-  createWindow();
+  await createWindow();
   createTray();
 });
 

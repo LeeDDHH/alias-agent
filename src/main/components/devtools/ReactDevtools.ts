@@ -9,7 +9,7 @@ import installExtension, {
 
 import { session } from 'electron';
 
-import { reactDevtools, extDir } from './Const';
+import { reactDevtools, extDir } from '../../../lib/Const';
 
 // React Devtools の場所を探す関数
 const searchReactDevtools = async () => {

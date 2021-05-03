@@ -4,9 +4,9 @@ import path from 'path';
 import url from 'url';
 import { BrowserWindow, screen } from 'electron';
 
-import { bootReactDevtools } from './ReactDevtools';
+import { bootReactDevtools } from '../devtools/ReactDevtools';
 import { _mainWindowsEvents } from './WindowsEvents';
-import { isDev } from './Const';
+import { isDev } from '../../../lib/Const';
 
 let mainWindow: BrowserWindow;
 let settingWindow: BrowserWindow;
@@ -27,6 +27,8 @@ const _createMainWindow = async () => {
     frame: false,
     resizable: false,
     fullscreenable: false,
+    show: false,
+    skipTaskbar: true,
     webPreferences: {
       /**
        * BrowserWindowインスタンス（レンダラープロセス）では
@@ -47,7 +49,7 @@ const _createMainWindow = async () => {
     },
   });
 
-  mainWindow.hide();
+  // mainWindow.hide();
   // mainWindow.once('ready-to-show', () => mainWindow.hide());
 };
 
@@ -55,8 +57,11 @@ const _createSettingWindow = async () => {
   settingWindow = new BrowserWindow({
     width: 800,
     height: 600,
+    frame: false,
     resizable: false,
     fullscreenable: false,
+    show: false,
+    skipTaskbar: true,
     webPreferences: {
       /**
        * BrowserWindowインスタンス（レンダラープロセス）では
@@ -76,7 +81,7 @@ const _createSettingWindow = async () => {
       preload: path.join(__dirname, 'preload.js'),
     },
   });
-  settingWindow.hide();
+  // settingWindow.hide();
 };
 
 const _bootReactDev = async () => {
@@ -131,12 +136,4 @@ const destroyWindow = () => {
   if (!mainWindow.isDestroyed) return mainWindow.destroy();
 };
 
-const mainViewToggle = () => {
-  if (mainWindow.isFocused()) {
-    mainWindow.webContents.send('initInputValue');
-    return mainWindow.hide();
-  }
-  mainWindow.show();
-};
-
-export { mainWindow, createWindow, destroyWindow, mainViewToggle };
+export { mainWindow, settingWindow, createWindow, destroyWindow };

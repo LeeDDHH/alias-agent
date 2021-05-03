@@ -1,9 +1,12 @@
 import { app } from 'electron';
 
+import { settingWindowToggle } from '../windows/WindowsEvents';
+
 const trayMenu: Electron.MenuItemConstructorOptions[] = [
-  { label: 'Item1', type: 'radio' },
-  { label: 'Item2', type: 'radio' },
-  { label: 'Item3', type: 'radio', checked: true },
+  {
+    label: '設定',
+    click: settingWindowToggle,
+  },
   { type: 'separator' },
   {
     label: '修了',

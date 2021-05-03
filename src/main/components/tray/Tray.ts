@@ -1,15 +1,16 @@
 import path from 'path';
 import { Tray, Menu, app } from 'electron';
 
-import { trayMenu } from '../data/trayMenu';
+import { trayMenu } from './trayMenu';
+import { trayImage } from '../../../lib/Const';
 
 let tray = null;
 
 const createTray = () => {
-  const image = path.join(app.getAppPath(), 'src/images/terminal16x16.png');
+  const image = path.join(app.getAppPath(), trayImage);
   tray = new Tray(image);
   const contextMenu = Menu.buildFromTemplate(trayMenu);
-  tray.setToolTip('This is my application.');
+  tray.setToolTip('Alias Agent');
   tray.setContextMenu(contextMenu);
 };
 

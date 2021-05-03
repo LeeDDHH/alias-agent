@@ -12,5 +12,13 @@ const extDir = isDarwin
     '/AppData/Local/Google/Chrome/User Data'
   : // Linux
     '/.config/google-chrome';
+const trayImage = 'src/images/terminal16x16.png';
+const defaultMainViewToggleShortcut = 'Control+Space';
 
-export { isDev, reactDevtools, extDir };
+export {
+  isDev,
+  reactDevtools,
+  extDir,
+  trayImage,
+  defaultMainViewToggleShortcut,
+};
