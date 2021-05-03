@@ -17,8 +17,8 @@
 nodebrew での方法を記載
 
 ```zsh
-nodebrew install-binary 12.21.0
-nodebrew use 12.21.0
+nodebrew install-binary 14.16.1
+nodebrew use 14.16.1
 ```
 
 [TypeScript + React JSX + CSS Modules で実現するタイプセーフな Web 開発](https://qiita.com/Quramy/items/a5d8967cdbd1b8575130)
