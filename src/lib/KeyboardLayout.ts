@@ -10,7 +10,8 @@ const _convertElectronKey = (code: string) => {
 // キー配列にある一般キーを最後に入力された一般キーにする
 const _setLastInputNormalKey = (codes: HotKeys, convertedKey: string) => {
   return codes.map((key: string) => {
-    if (!modifierKeys.includes(key)) return convertedKey;
+    if (!modifierKeys.includes(key) && !modifierKeys.includes(convertedKey))
+      return convertedKey;
     return key;
   });
 };
@@ -32,7 +33,29 @@ const convertKeyboardKey = (
     newCodes,
     convertedKey
   );
-  return _reduceDuplicatedKeys(convertedCodes);
+  const newUniqueCodes = _reduceDuplicatedKeys(convertedCodes);
+  let newArray: string[] = [];
+  let mustLastAdd = '';
+  newUniqueCodes.map((key, index) => {
+    const indexValue = modifierKeys.indexOf(key);
+    if (newArray.length < 1) return newArray.push(key);
+    if (indexValue < 0) {
+      // if (index + 1 === newUniqueCodes.length && mustLastAdd.length > 0) {
+      return newArray.push(key);
+    }
+
+    let higherSequentialIndex = newArray.findIndex(
+      (k) => modifierKeys.indexOf(k) > indexValue
+    );
+
+    if (higherSequentialIndex < 0) {
+      return newArray.push(key);
+    } else {
+      return newArray.splice(higherSequentialIndex, 0, key);
+    }
+  });
+
+  return newArray;
 };
 
 export { convertKeyboardKey };

@@ -1,4 +1,4 @@
-const modifierKeys = ['Command', 'Shift', 'Alt', 'Control'];
+const modifierKeys = ['Command', 'Alt', 'Control', 'Shift'];
 
 const convertModifierKey: ConvertModifierKey = {
   KeyA: 'a',
