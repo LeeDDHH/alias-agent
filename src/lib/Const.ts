@@ -16,6 +16,8 @@ const trayImage = isDev
   ? 'src/images/terminal16x16.png'
   : 'dist/main/images/terminal16x16.png';
 const defaultMainViewToggleShortcut = 'Control+Space';
+const mainViewPort = '4000';
+const settingViewPort = '4001';
 
 export {
   isDev,
@@ -23,4 +25,6 @@ export {
   extDir,
   trayImage,
   defaultMainViewToggleShortcut,
+  mainViewPort,
+  settingViewPort,
 };

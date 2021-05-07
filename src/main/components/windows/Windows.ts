@@ -6,7 +6,7 @@ import { BrowserWindow, screen } from 'electron';
 
 import { bootReactDevtools } from '../devtools/ReactDevtools';
 import { _mainWindowsEvents } from './WindowsEvents';
-import { isDev } from '../../../lib/Const';
+import { isDev, mainViewPort, settingViewPort } from '../../../lib/Const';
 
 let mainWindow: BrowserWindow;
 let settingWindow: BrowserWindow;
@@ -97,8 +97,8 @@ const _bootReactDev = async () => {
 const _loadRendererProcess = async () => {
   // レンダラープロセスをロード
   if (isDev) {
-    await mainWindow.loadURL(`http://localhost:4000`);
-    await settingWindow.loadURL(`http://localhost:4001`);
+    await mainWindow.loadURL(`http://localhost:${mainViewPort}`);
+    await settingWindow.loadURL(`http://localhost:${settingViewPort}`);
   } else {
     await mainWindow.loadURL(
       url.format({
