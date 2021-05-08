@@ -19,6 +19,20 @@ const _setLastInputNormalKey = (codes: HotKeys, convertedKey: string) => {
 // 重複しているキーを排除する
 const _reduceDuplicatedKeys = (codes: HotKeys) => Array.from(new Set(codes));
 
+const _definedOrderKeys = (codes: HotKeys) => {
+  let newArray: string[] = [];
+  let mustLastAdd = '';
+
+  codes.map((key: string) => {
+    const indexValue = modifierKeys.indexOf(key);
+    if (indexValue < 0) return (mustLastAdd = key);
+    return (newArray[indexValue] = key);
+  });
+  if (mustLastAdd.length > 0) newArray.push(mustLastAdd);
+
+  return newArray.filter(Boolean);
+};
+
 const convertKeyboardKey = (
   e: React.KeyboardEvent<HTMLInputElement>,
   keys: HotKeys
@@ -34,28 +48,7 @@ const convertKeyboardKey = (
     convertedKey
   );
   const newUniqueCodes = _reduceDuplicatedKeys(convertedCodes);
-  let newArray: string[] = [];
-  let mustLastAdd = '';
-  newUniqueCodes.map((key, index) => {
-    const indexValue = modifierKeys.indexOf(key);
-    if (newArray.length < 1) return newArray.push(key);
-    if (indexValue < 0) {
-      // if (index + 1 === newUniqueCodes.length && mustLastAdd.length > 0) {
-      return newArray.push(key);
-    }
-
-    let higherSequentialIndex = newArray.findIndex(
-      (k) => modifierKeys.indexOf(k) > indexValue
-    );
-
-    if (higherSequentialIndex < 0) {
-      return newArray.push(key);
-    } else {
-      return newArray.splice(higherSequentialIndex, 0, key);
-    }
-  });
-
-  return newArray;
+  return _definedOrderKeys(newUniqueCodes);
 };
 
 export { convertKeyboardKey };
