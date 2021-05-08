@@ -9,7 +9,8 @@ import { app } from 'electron';
 import { destroyWindow, createWindow } from './components/windows/Windows';
 import { tray, createTray } from './components/tray/Tray';
 import './ipc/ipcMainActions';
-import './components/globalShortcuts/GlobalShortcut';
+import { prepareApp } from './components/prepareApp/prepareApp';
+import { unSetAllGlobalShortcut } from './components/globalShortcuts/GlobalShortcut';
 
 app.dock.hide();
 /**
@@ -17,13 +18,17 @@ app.dock.hide();
  * レンダラープロセス（index.htmlとそこから呼ばれるスクリプト）をロードする
  */
 app.whenReady().then(async () => {
+  await prepareApp();
   // BrowserWindow インスタンスを作成
   await createWindow();
   createTray();
 });
 
 // すべてのウィンドウが閉じられたらアプリを終了する
-app.once('window-all-closed', () => app.quit());
+app.once('window-all-closed', async () => {
+  await unSetAllGlobalShortcut();
+  app.quit();
+});
 
 app.on('before-quit', () => destroyWindow());
 

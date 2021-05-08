@@ -18,6 +18,7 @@ const trayImage = isDev
 const defaultMainViewToggleShortcut = 'Control+Space';
 const mainViewPort = '4000';
 const settingViewPort = '4001';
+const globalSettingJsonName = 'global_setting.json';
 
 export {
   isDev,
@@ -27,4 +28,5 @@ export {
   defaultMainViewToggleShortcut,
   mainViewPort,
   settingViewPort,
+  globalSettingJsonName,
 };

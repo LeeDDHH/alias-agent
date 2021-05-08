@@ -1,18 +1,51 @@
-import { app, globalShortcut } from 'electron';
+import path from 'path';
+import { app } from 'electron';
+import { globalShortcut } from 'electron';
 import { mainViewToggle } from '../windows/WindowsEvents';
-import { defaultMainViewToggleShortcut } from '../../../lib/Const';
+import { isExistFile, readJsonFile } from '../../../lib/Utility';
+import {
+  globalSettingJsonName,
+  defaultMainViewToggleShortcut,
+} from '../../../lib/Const';
 
-app.whenReady().then(() => {
-  const ret = globalShortcut.register(defaultMainViewToggleShortcut, () => {
-    mainViewToggle();
-  });
+const _getMainViewToggleShortcut = async () => {
+  const globalSettingsFilePath = path.join(
+    app.getPath('userData'),
+    globalSettingJsonName
+  );
+  let mainViewToggleShortcut = defaultMainViewToggleShortcut;
 
-  if (!ret) console.log('registration failed');
+  if (isExistFile(globalSettingsFilePath)) {
+    let data;
+    try {
+      data = await readJsonFile(globalSettingsFilePath);
+      mainViewToggleShortcut = data.globalShortcut;
+    } catch (e) {
+      console.log('globalSettingsFile read failed: ' + e);
+    }
+  }
+
+  return mainViewToggleShortcut;
+};
+
+const setAllGlobalShortcut = async () => {
+  let mainViewToggleShortcut = await _getMainViewToggleShortcut();
+
+  try {
+    globalShortcut.register(mainViewToggleShortcut, () => {
+      mainViewToggle();
+    });
+  } catch (e) {
+    console.log('globalShortcut register failed: ' + e);
+  }
 
   console.log(globalShortcut.isRegistered(defaultMainViewToggleShortcut));
-});
+};
 
-app.on('will-quit', () => {
-  globalShortcut.unregister(defaultMainViewToggleShortcut);
+const unSetAllGlobalShortcut = async () => {
+  let mainViewToggleShortcut = await _getMainViewToggleShortcut();
+  globalShortcut.unregister(mainViewToggleShortcut);
   globalShortcut.unregisterAll();
-});
+};
+
+export { setAllGlobalShortcut, unSetAllGlobalShortcut };
