@@ -8,7 +8,7 @@ import {
   defaultMainViewToggleShortcut,
 } from '../../../lib/Const';
 
-const _getMainViewToggleShortcut = async () => {
+const getMainViewToggleShortcut = async () => {
   const globalSettingsFilePath = path.join(
     app.getPath('userData'),
     globalSettingJsonName
@@ -29,7 +29,7 @@ const _getMainViewToggleShortcut = async () => {
 };
 
 const setAllGlobalShortcut = async () => {
-  let mainViewToggleShortcut = await _getMainViewToggleShortcut();
+  let mainViewToggleShortcut = await getMainViewToggleShortcut();
 
   try {
     globalShortcut.register(mainViewToggleShortcut, () => {
@@ -43,9 +43,13 @@ const setAllGlobalShortcut = async () => {
 };
 
 const unSetAllGlobalShortcut = async () => {
-  let mainViewToggleShortcut = await _getMainViewToggleShortcut();
+  let mainViewToggleShortcut = await getMainViewToggleShortcut();
   globalShortcut.unregister(mainViewToggleShortcut);
   globalShortcut.unregisterAll();
 };
 
-export { setAllGlobalShortcut, unSetAllGlobalShortcut };
+export {
+  getMainViewToggleShortcut,
+  setAllGlobalShortcut,
+  unSetAllGlobalShortcut,
+};

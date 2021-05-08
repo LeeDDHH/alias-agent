@@ -8,6 +8,11 @@ const SettingView = () => {
   const [keys, setKeys] = useState<HotKeys>([]);
   // const [input, setInput] = useState('');
   // const [message, setMessage] = useState<string | null>('');
+  const getMainViewToggleShortcut = async () => {
+    const mainViewToggleShortcut: string = await window.ipcApi.handleGetMainViewToggleShortcut();
+    const shortcutKeyArray: HotKeys = mainViewToggleShortcut.split('+');
+    setKeys(shortcutKeyArray);
+  };
 
   useEffect(() => {
     //   const handleMessage = (event, message) => setMessage(message)
@@ -15,7 +20,7 @@ const SettingView = () => {
     //   return () => {
     //     window.ipcRenderer.removeListener('message', handleMessage)
     //   }
-    // window.ipcApi.handleInitInputValue(resetKeys);
+    getMainViewToggleShortcut();
   }, []);
 
   const resetKeys = () => setKeys([]);

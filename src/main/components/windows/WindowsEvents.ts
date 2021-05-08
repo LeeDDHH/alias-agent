@@ -1,9 +1,4 @@
-import {
-  mainWindow,
-  settingWindow,
-  renderSettingWindow,
-  destroySettingWindow,
-} from './Windows';
+import { mainWindow, settingWindow, renderSettingWindow } from './Windows';
 
 const mainWindowsEvents = () => {
   mainWindow.on('blur', () => mainWindow.hide());
@@ -20,7 +15,7 @@ const mainViewToggle = () => {
 const settingWindowToggle = () => {
   !settingWindow || settingWindow.isDestroyed()
     ? renderSettingWindow()
-    : destroySettingWindow();
+    : settingWindow.destroy();
 };
 
 export { mainWindowsEvents, mainViewToggle, settingWindowToggle };

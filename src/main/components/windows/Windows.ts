@@ -151,13 +151,13 @@ const _destroyMainWindow = () => {
   if (!mainWindow.isDestroyed) return mainWindow.destroy();
 };
 
-const destroySettingWindow = () => {
+const _destroySettingWindow = () => {
   if (!settingWindow.isDestroyed) return settingWindow.destroy();
 };
 
 const destroyAllWindow = () => {
   _destroyMainWindow();
-  destroySettingWindow();
+  _destroySettingWindow();
 };
 
 export {
@@ -165,6 +165,5 @@ export {
   settingWindow,
   bootWindow,
   renderSettingWindow,
-  destroySettingWindow,
   destroyAllWindow,
 };
