@@ -5,7 +5,7 @@ import url from 'url';
 import { BrowserWindow, screen } from 'electron';
 
 import { bootReactDevtools } from '../devtools/ReactDevtools';
-import { _mainWindowsEvents } from './WindowsEvents';
+import { mainWindowsEvents } from './WindowsEvents';
 import { isDev, mainViewPort, settingViewPort } from '../../../lib/Const';
 
 let mainWindow: BrowserWindow;
@@ -81,7 +81,7 @@ const _createSettingWindow = async () => {
       preload: path.join(__dirname, 'preload.js'),
     },
   });
-  // settingWindow.hide();
+  settingWindow.show();
 };
 
 const _bootReactDev = async () => {
@@ -90,15 +90,13 @@ const _bootReactDev = async () => {
 
   mainWindow.webContents.on('did-frame-finish-load', async () => {
     mainWindow.webContents.openDevTools({ mode: 'detach' });
-    settingWindow.webContents.openDevTools({ mode: 'detach' });
   });
 };
 
-const _loadRendererProcess = async () => {
+const _loadMainWindowRendererProcess = async () => {
   // レンダラープロセスをロード
   if (isDev) {
     await mainWindow.loadURL(`http://localhost:${mainViewPort}`);
-    await settingWindow.loadURL(`http://localhost:${settingViewPort}`);
   } else {
     await mainWindow.loadURL(
       url.format({
@@ -107,6 +105,14 @@ const _loadRendererProcess = async () => {
         slashes: true,
       })
     );
+  }
+};
+
+const _loadSettingWindowRendererProcess = async () => {
+  // レンダラープロセスをロード
+  if (isDev) {
+    await settingWindow.loadURL(`http://localhost:${settingViewPort}`);
+  } else {
     await settingWindow.loadURL(
       url.format({
         pathname: path.join(__dirname, '../renderer/settingView/index.html'),
@@ -118,19 +124,47 @@ const _loadRendererProcess = async () => {
 };
 
 //BrowserWindowインスタンスを作成する関数
-const createWindow = async () => {
+const bootWindow = async () => {
   await _createMainWindow();
-  await _createSettingWindow();
-  _mainWindowsEvents();
+  mainWindowsEvents();
 
   // 開発時にはデベロッパーツールを開く
   if (isDev) await _bootReactDev();
 
-  await _loadRendererProcess();
+  await _loadMainWindowRendererProcess();
 };
 
-const destroyWindow = () => {
+const renderSettingWindow = async () => {
+  await _createSettingWindow();
+
+  // 開発時にはデベロッパーツールを開く
+  if (isDev) {
+    settingWindow.webContents.on('did-frame-finish-load', async () => {
+      settingWindow.webContents.openDevTools({ mode: 'detach' });
+    });
+  }
+
+  await _loadSettingWindowRendererProcess();
+};
+
+const _destroyMainWindow = () => {
   if (!mainWindow.isDestroyed) return mainWindow.destroy();
 };
 
-export { mainWindow, settingWindow, createWindow, destroyWindow };
+const destroySettingWindow = () => {
+  if (!settingWindow.isDestroyed) return settingWindow.destroy();
+};
+
+const destroyAllWindow = () => {
+  _destroyMainWindow();
+  destroySettingWindow();
+};
+
+export {
+  mainWindow,
+  settingWindow,
+  bootWindow,
+  renderSettingWindow,
+  destroySettingWindow,
+  destroyAllWindow,
+};

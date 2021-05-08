@@ -6,13 +6,15 @@ import fs from 'fs';
 import path from 'path';
  */
 import { app } from 'electron';
-import { destroyWindow, createWindow } from './components/windows/Windows';
+import { destroyAllWindow, bootWindow } from './components/windows/Windows';
 import { tray, createTray } from './components/tray/Tray';
 import './ipc/ipcMainActions';
 import { prepareApp } from './components/prepareApp/prepareApp';
 import { unSetAllGlobalShortcut } from './components/globalShortcuts/GlobalShortcut';
 
+// 起動中、メニューバーだけに表示させる
 app.dock.hide();
+
 /**
  * アプリを起動する準備が完了したら BrowserWindow インスタンスを作成し、
  * レンダラープロセス（index.htmlとそこから呼ばれるスクリプト）をロードする
@@ -20,7 +22,7 @@ app.dock.hide();
 app.whenReady().then(async () => {
   await prepareApp();
   // BrowserWindow インスタンスを作成
-  await createWindow();
+  await bootWindow();
   createTray();
 });
 
@@ -30,6 +32,6 @@ app.once('window-all-closed', async () => {
   app.quit();
 });
 
-app.on('before-quit', () => destroyWindow());
+app.on('before-quit', () => destroyAllWindow());
 
-app.on('quit', () => destroyWindow());
+app.on('quit', () => destroyAllWindow());
