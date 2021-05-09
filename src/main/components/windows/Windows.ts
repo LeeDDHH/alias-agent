@@ -152,7 +152,8 @@ const _destroyMainWindow = () => {
 };
 
 const _destroySettingWindow = () => {
-  if (!settingWindow.isDestroyed) return settingWindow.destroy();
+  if (!!settingWindow && !settingWindow.isDestroyed)
+    return settingWindow.destroy();
 };
 
 const destroyAllWindow = () => {
