@@ -1,7 +1,10 @@
 import { mainWindow, settingWindow, renderSettingWindow } from './Windows';
 
 const mainWindowsEvents = () => {
-  mainWindow.on('blur', () => mainWindow.hide());
+  mainWindow.on('blur', () => {
+    mainWindow.hide();
+    mainWindow.webContents.send('initInputValue');
+  });
 };
 
 const mainViewToggle = () => {

@@ -6,8 +6,13 @@
   width: 100%;
 }
 
-.font {
+.inputBox {
   font-size: 40px;
   line-height: 1.5;
   text-indent: 0.3rem;
+  outline: none;
 }
+
+/* .inputBox::selection {
+  background: transparent;
+} */

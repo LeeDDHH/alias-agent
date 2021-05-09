@@ -25,17 +25,24 @@ const MainView = () => {
     setMessage(result);
   };
 
+  const handleKeyEvent = (event: React.ChangeEvent<HTMLInputElement>) => {
+    event.preventDefault();
+    setInput(event.target.value);
+  };
+
   return (
     <div className={styles.height100}>
       {message && <p>{message}</p>}
 
       <form className={styles.height100} onSubmit={handleSubmit}>
         <input
-          className={`${styles.height100} ${styles.width100} ${styles.font}`}
+          className={`${styles.height100} ${styles.width100} ${styles.inputBox}`}
           type="text"
           value={input}
-          onChange={(e) => setInput(e.target.value)}
+          onChange={(e) => handleKeyEvent(e)}
           autoFocus
+          onBlur={resetInput}
+          spellCheck={false}
         />
       </form>
     </div>
