@@ -19,6 +19,9 @@
     "installer": "electron-builder --mac --x64"
   },
   "license": "MIT",
+  "engines": {
+    "npm": "❗❗PLEASE, USE YARN INSTEAD❗❗"
+  },
   "devDependencies": {
     "@types/copy-webpack-plugin": "^8.0.0",
     "@types/html-webpack-plugin": "^3.2.5",
