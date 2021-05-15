@@ -19,6 +19,7 @@ const defaultMainViewToggleShortcut = 'Control+Space';
 const mainViewPort = '4000';
 const settingViewPort = '4001';
 const globalSettingJsonName = 'global_setting.json';
+const aliasSettingJsonName = 'alias.json';
 
 export {
   isDev,
@@ -29,4 +30,5 @@ export {
   mainViewPort,
   settingViewPort,
   globalSettingJsonName,
+  aliasSettingJsonName,
 };

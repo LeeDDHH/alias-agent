@@ -4,7 +4,6 @@ import styles from '../../styles/mainView.module.css';
 
 const MainView = () => {
   const [input, setInput] = useState('');
-  const [message, setMessage] = useState<string | null>('');
 
   useEffect(() => {
     //   const handleMessage = (event, message) => setMessage(message)
@@ -21,19 +20,26 @@ const MainView = () => {
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    const result = await window.ipcApi.handleMessage(input);
-    setMessage(result);
+    await window.ipcApi.handleExecAlias(input);
+    resetInput();
   };
 
+  /*
+    IDEA
+    tabでのアクション
+      - 入力した文字列からaliasの候補を自動補完する
+        - なければ、入力した文字列をそのまま表示する
+      - 引数が必要なaliasの場合、一つスペースをあける
+      - 入力した文字列をもとに候補のaliasが複数あれば、tabで他の候補も表示する
+        - 仕様的に衝突すると思うので、やり方は別途考える
+   */
   const handleKeyEvent = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
     setInput(event.target.value);
   };
 
   return (
-    <div className={styles.height100}>
-      {message && <p>{message}</p>}
-
+    <div className={`${styles.height100} ${styles.inputLayer}`}>
       <form className={styles.height100} onSubmit={handleSubmit}>
         <input
           className={`${styles.height100} ${styles.width100} ${styles.inputBox}`}

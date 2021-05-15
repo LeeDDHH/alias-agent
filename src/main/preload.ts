@@ -12,4 +12,7 @@ contextBridge.exposeInMainWorld('ipcApi', {
   handleGetMainViewToggleShortcut: () => {
     return ipcRenderer.invoke('getMainViewToggleShortcut');
   },
+  handleExecAlias: async (command: string) => {
+    return await ipcRenderer.invoke('execAlias', command);
+  },
 });
