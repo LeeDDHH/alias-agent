@@ -6,6 +6,10 @@
   width: 100%;
 }
 
+.inputLayer {
+  background-color: white;
+}
+
 .inputBox {
   font-size: 40px;
   line-height: 1.5;

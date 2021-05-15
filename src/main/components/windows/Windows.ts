@@ -15,7 +15,7 @@ const _createMainWindow = async () => {
   const display = screen.getPrimaryDisplay();
 
   const defaultWindowWidth = display.bounds.width / 5;
-  const defaultWindowHeight = 70;
+  const defaultWindowHeight = 420;
   const defaultCenterXPositionView =
     display.bounds.width / 2 - defaultWindowWidth / 2;
   const defaultYPositionView = display.bounds.height / 10;
@@ -29,6 +29,7 @@ const _createMainWindow = async () => {
     fullscreenable: false,
     show: false,
     skipTaskbar: true,
+    transparent: true,
     webPreferences: {
       /**
        * BrowserWindowインスタンス（レンダラープロセス）では
