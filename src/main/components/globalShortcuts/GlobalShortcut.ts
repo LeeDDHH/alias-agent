@@ -8,17 +8,18 @@ import {
   defaultMainViewToggleShortcut,
 } from '../../../lib/Const';
 
+const getGlobalSettingsFilePath = path.join(
+  app.getPath('userData'),
+  globalSettingJsonName
+);
+
 const getMainViewToggleShortcut = async () => {
-  const globalSettingsFilePath = path.join(
-    app.getPath('userData'),
-    globalSettingJsonName
-  );
   let mainViewToggleShortcut = defaultMainViewToggleShortcut;
 
-  if (isExistFile(globalSettingsFilePath)) {
+  if (isExistFile(getGlobalSettingsFilePath)) {
     let data;
     try {
-      data = await readJsonFile(globalSettingsFilePath);
+      data = await readJsonFile(getGlobalSettingsFilePath);
       mainViewToggleShortcut = data.globalShortcut;
     } catch (e) {
       console.log('globalSettingsFile read failed: ' + e);
