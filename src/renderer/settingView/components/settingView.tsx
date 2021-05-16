@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
+import { isUndefinedOrNull } from '../../../lib/TypeCheck';
 import { convertKeyboardKey } from '../../../lib/KeyboardLayout';
 import AliasData from './alias/aliasData';
 
@@ -67,8 +68,6 @@ const SettingView = () => {
   };
 
   const findAliasIndex = (id: number) => alias.findIndex((i) => i.id === id);
-
-  const isUndefinedOrNull = (v: any) => typeof v === 'undefined' || v == null;
 
   const changeAliasInput = (
     evt: React.ChangeEvent<HTMLInputElement>,
