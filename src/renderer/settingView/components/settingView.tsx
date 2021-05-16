@@ -1,17 +1,41 @@
 import React, { useState, useEffect } from 'react';
 
 import { convertKeyboardKey } from '../../../lib/KeyboardLayout';
+import AliasData from './alias/aliasData';
 
-import styles from '../../styles/mainView.module.css';
+import styles from '../../styles/settingView.module.css';
 
 const SettingView = () => {
   const [keys, setKeys] = useState<HotKeys>([]);
+  const [alias, setAlias] = useState<AliasData>([]);
   // const [input, setInput] = useState('');
   // const [message, setMessage] = useState<string | null>('');
   const getMainViewToggleShortcut = async () => {
     const mainViewToggleShortcut: string = await window.ipcApi.handleGetMainViewToggleShortcut();
     const shortcutKeyArray: HotKeys = mainViewToggleShortcut.split('+');
     setKeys(shortcutKeyArray);
+  };
+
+  const generateEmptyAliasItem = (maxId: number) => {
+    return { id: maxId + 1, name: '', value: '' };
+  };
+
+  const getNextAliasItemId = (aliasData: AliasData) => {
+    const idArray = () => {
+      return aliasData.map((item: AliasItem) => {
+        return item.id;
+      });
+    };
+    return Math.max(...idArray());
+  };
+
+  const getAliasData = async () => {
+    let aliasData: AliasData = await window.ipcApi.handleGetAliasData();
+    if (isUndefinedOrNull(aliasData))
+      return setAlias([generateEmptyAliasItem(-1)]);
+    const maxId = getNextAliasItemId(aliasData);
+    aliasData.push(generateEmptyAliasItem(maxId));
+    setAlias(aliasData);
   };
 
   useEffect(() => {
@@ -21,6 +45,7 @@ const SettingView = () => {
     //     window.ipcRenderer.removeListener('message', handleMessage)
     //   }
     getMainViewToggleShortcut();
+    getAliasData();
   }, []);
 
   const resetKeys = () => setKeys([]);
@@ -41,6 +66,66 @@ const SettingView = () => {
     return keys.join('+');
   };
 
+  const findAliasIndex = (id: number) => alias.findIndex((i) => i.id === id);
+
+  const isUndefinedOrNull = (v: any) => typeof v === 'undefined' || v == null;
+
+  const changeAliasName = (
+    evt: React.ChangeEvent<HTMLInputElement>,
+    id: number
+  ) => {
+    // 変更するAliasのインデックスを配列から特定する
+    const aliasIndex = findAliasIndex(id);
+    // 変更するAliasが見つからなかったら何も変更しない
+    if (isUndefinedOrNull(aliasIndex)) return;
+
+    // Aliasを新しい配列にして、Aliasを変更する
+    const newAlias = alias.concat();
+    newAlias[aliasIndex].name = evt.target.value;
+    setAlias(newAlias);
+  };
+
+  const changeAliasCommand = (
+    evt: React.ChangeEvent<HTMLInputElement>,
+    id: number
+  ) => {
+    // 変更するAliasのインデックスを配列から特定する
+    const aliasIndex = findAliasIndex(id);
+    // 変更するAliasが見つからなかったら何も変更しない
+    if (isUndefinedOrNull(aliasIndex)) return;
+
+    // Aliasを新しい配列にして、Aliasを変更する
+    const newAlias = alias.concat();
+    newAlias[aliasIndex].value = evt.target.value;
+    setAlias(newAlias);
+  };
+
+  const saveAlias = (evt: React.FormEvent) => {
+    console.log(alias);
+    evt.preventDefault();
+    window.ipcApi.handleSaveAliasData(alias);
+  };
+
+  const viewAliasData = () => {
+    if (alias.length === 0) return '';
+    const aliasData = alias.map((item: AliasItem) => {
+      return (
+        <AliasData
+          aliasItem={item}
+          changeAliasName={changeAliasName}
+          changeAliasCommand={changeAliasCommand}
+        />
+      );
+    });
+    const aliasLayout = (
+      <form onSubmit={saveAlias}>
+        {aliasData}
+        <button type="submit">保存</button>
+      </form>
+    );
+    return aliasLayout;
+  };
+
   return (
     <div className={styles.height100}>
       <input
@@ -50,6 +135,7 @@ const SettingView = () => {
         value={visualKeys()}
       />
       <input type="button" onClick={resetKeys} value={'Clear'} />
+      {viewAliasData()}
       {/* {message && <p>{message}</p>}
 
       <form className={styles.height100} onSubmit={handleSubmit}>
