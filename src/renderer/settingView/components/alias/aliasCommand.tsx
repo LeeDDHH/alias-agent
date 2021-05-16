@@ -4,7 +4,8 @@ interface Props {
   aliasItem: AliasItem;
   changeAliasCommand: (
     e: React.ChangeEvent<HTMLInputElement>,
-    id: number
+    id: number,
+    type: 'value'
   ) => void;
 }
 
@@ -13,8 +14,8 @@ const AliasCommand: React.FC<Props> = ({ aliasItem, changeAliasCommand }) => {
     <input
       type="text"
       name="aliasCommand"
-      onChange={(e) => changeAliasCommand(e, aliasItem.id)}
-      value={aliasItem.name}
+      onChange={(e) => changeAliasCommand(e, aliasItem.id, 'value')}
+      value={aliasItem.value}
     />
   );
 };

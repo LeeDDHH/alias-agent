@@ -7,27 +7,20 @@ import styles from '../../../styles/settingView.module.css';
 
 interface Props {
   aliasItem: AliasItem;
-  changeAliasName: (e: React.ChangeEvent<HTMLInputElement>, id: number) => void;
-  changeAliasCommand: (
+  changeAliasInput: (
     e: React.ChangeEvent<HTMLInputElement>,
-    id: number
+    id: number,
+    type: 'name' | 'value'
   ) => void;
 }
 
-const AliasData: React.FC<Props> = ({
-  aliasItem,
-  changeAliasName,
-  changeAliasCommand,
-}) => {
+const AliasData: React.FC<Props> = ({ aliasItem, changeAliasInput }) => {
   return (
-    <div
-      id={aliasItem.id.toString()}
-      key={aliasItem.id}
-      className={styles.layout}>
-      <AliasName aliasItem={aliasItem} changeAliasName={changeAliasName} />
+    <div id={aliasItem.id.toString()} className={styles.layout}>
+      <AliasName aliasItem={aliasItem} changeAliasName={changeAliasInput} />
       <AliasCommand
         aliasItem={aliasItem}
-        changeAliasCommand={changeAliasCommand}
+        changeAliasCommand={changeAliasInput}
       />
     </div>
   );

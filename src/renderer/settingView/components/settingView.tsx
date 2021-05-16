@@ -70,9 +70,10 @@ const SettingView = () => {
 
   const isUndefinedOrNull = (v: any) => typeof v === 'undefined' || v == null;
 
-  const changeAliasName = (
+  const changeAliasInput = (
     evt: React.ChangeEvent<HTMLInputElement>,
-    id: number
+    id: number,
+    type: 'name' | 'value'
   ) => {
     // 変更するAliasのインデックスを配列から特定する
     const aliasIndex = findAliasIndex(id);
@@ -81,22 +82,11 @@ const SettingView = () => {
 
     // Aliasを新しい配列にして、Aliasを変更する
     const newAlias = alias.concat();
-    newAlias[aliasIndex].name = evt.target.value;
-    setAlias(newAlias);
-  };
-
-  const changeAliasCommand = (
-    evt: React.ChangeEvent<HTMLInputElement>,
-    id: number
-  ) => {
-    // 変更するAliasのインデックスを配列から特定する
-    const aliasIndex = findAliasIndex(id);
-    // 変更するAliasが見つからなかったら何も変更しない
-    if (isUndefinedOrNull(aliasIndex)) return;
-
-    // Aliasを新しい配列にして、Aliasを変更する
-    const newAlias = alias.concat();
-    newAlias[aliasIndex].value = evt.target.value;
+    if (type === 'name') {
+      newAlias[aliasIndex].name = evt.target.value;
+    } else {
+      newAlias[aliasIndex].value = evt.target.value;
+    }
     setAlias(newAlias);
   };
 
@@ -111,9 +101,9 @@ const SettingView = () => {
     const aliasData = alias.map((item: AliasItem) => {
       return (
         <AliasData
+          key={item.id}
           aliasItem={item}
-          changeAliasName={changeAliasName}
-          changeAliasCommand={changeAliasCommand}
+          changeAliasInput={changeAliasInput}
         />
       );
     });
