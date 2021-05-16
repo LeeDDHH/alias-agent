@@ -3,26 +3,27 @@ import { exec } from 'child_process';
 import { readJsonFile } from '../../../lib/Utility';
 import { getAliasSettingsFilePath } from '../settings/alias';
 
+import _initialData from '../../../data/alias';
+
 let aliasData: AliasData;
-const _initialData = [
-  {
-    name: 'home',
-    value: 'open .',
-  },
-  {
-    name: 'github',
-    value: "open 'https://www.github.com'",
-  },
-];
+
+const getAliasDataFromFile = async () => {
+  try {
+    return await readJsonFile(getAliasSettingsFilePath);
+  } catch (e) {
+    console.log('aliasSettingsFile read failed: ' + e);
+    return _initialData;
+  }
+};
 
 const initAliasData = async () => {
   let data;
   try {
-    data = await readJsonFile(getAliasSettingsFilePath);
+    data = await getAliasDataFromFile();
     aliasData = data.alias;
   } catch (e) {
     console.log('aliasSettingsFile read failed: ' + e);
-    aliasData = _initialData;
+    aliasData = _initialData.alias;
   }
 };
 
@@ -69,4 +70,4 @@ const execCommand = async (command: string) => {
   // return { result: result };
 };
 
-export { aliasData, initAliasData, execCommand };
+export { aliasData, getAliasDataFromFile, initAliasData, execCommand };
