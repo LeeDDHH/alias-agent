@@ -12,6 +12,12 @@ contextBridge.exposeInMainWorld('ipcApi', {
   handleGetMainViewToggleShortcut: () => {
     return ipcRenderer.invoke('getMainViewToggleShortcut');
   },
+  handleGetAliasData: () => {
+    return ipcRenderer.invoke('getAliasData');
+  },
+  handleSaveAliasData: (aliasData: AliasData) => {
+    return ipcRenderer.invoke('saveAliasData', aliasData);
+  },
   handleExecAlias: async (command: string) => {
     return await ipcRenderer.invoke('execAlias', command);
   },

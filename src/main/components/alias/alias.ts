@@ -70,4 +70,8 @@ const execCommand = async (command: string) => {
   // return { result: result };
 };
 
+const validateAliasData = () => {};
+
+const saveAliasData = async (aliasData: AliasData) => {};
+
 export { aliasData, getAliasDataFromFile, initAliasData, execCommand };
