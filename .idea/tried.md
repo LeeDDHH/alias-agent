@@ -110,3 +110,12 @@ yarn -D add rimraf cross-env npm-run-all
   - [Electron でホットリロード開発をしたい！ - Qiita](https://qiita.com/ganariya/items/982803466e22dc53eaeb)
   - [sindresorhus/electron-reloader: Simple auto-reloading for Electron apps during development](https://github.com/sindresorhus/electron-reloader#readme)
   - [create-react-app と electron-builder で TypeScript と Hot Reload に完全対応した Electron アプリ開発環境を作成する - Qiita](https://qiita.com/yhirose/items/22b0621f0d36d983d8b0)
+
+## `typescript-json-schema` インストールとローカル実行
+
+```
+yarn add -D typescript-json-schema
+
+npx typescript-json-schema --strictNullChecks true --noExtraProps true --ignoreErrors true ./src/data/validate/alias.ts AliasDataSchema > ./src/data/validate/AliasDataSchema.json
+
+```
