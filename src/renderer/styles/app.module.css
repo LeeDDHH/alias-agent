@@ -1,3 +1,9 @@
+* {
+  -webkit-user-select: none;
+  -webkit-app-region: drag;
+  box-sizing: border-box;
+}
+
 html,
 body {
   height: 100%;
