@@ -1,8 +1,9 @@
 import { mainWindow, settingWindow, renderSettingWindow } from './Windows';
+import { isDev } from '../../../lib/Const';
 
 const mainWindowsEvents = () => {
   mainWindow.on('blur', () => {
-    mainWindow.hide();
+    if (!isDev) mainWindow.hide();
     mainWindow.webContents.send('initInputValue');
   });
 };
