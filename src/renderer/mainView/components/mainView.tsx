@@ -5,6 +5,10 @@ import styles from '../../styles/mainView.module.css';
 const MainView = React.memo(() => {
   const [input, setInput] = useState('');
 
+  const resetInput = useCallback((): void => {
+    setInput('');
+  }, []);
+
   useEffect(() => {
     //   const handleMessage = (event, message) => setMessage(message)
     //   window.ipcApi.on('message', handleMessage)
@@ -12,14 +16,10 @@ const MainView = React.memo(() => {
     //     window.ipcRenderer.removeListener('message', handleMessage)
     //   }
     window.ipcApi.handleInitInputValue(resetInput);
-  }, []);
-
-  const resetInput = useCallback(() => {
-    setInput('');
-  }, []);
+  }, [resetInput]);
 
   const handleSubmit = useCallback(
-    async (event: React.FormEvent) => {
+    async (event: React.FormEvent): Promise<void> => {
       event.preventDefault();
       await window.ipcApi.handleExecAlias(input);
       resetInput();
@@ -37,7 +37,7 @@ const MainView = React.memo(() => {
         - 仕様的に衝突すると思うので、やり方は別途考える
    */
   const handleKeyEvent = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
+    (event: React.ChangeEvent<HTMLInputElement>): void => {
       event.preventDefault();
       setInput(event.target.value);
     },

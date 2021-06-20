@@ -14,16 +14,20 @@ interface Props {
   ) => void;
 }
 
-const AliasData: React.FC<Props> = ({ aliasItem, changeAliasInput }) => {
-  return (
-    <div id={aliasItem.id.toString()} className={styles.layout}>
-      <AliasName aliasItem={aliasItem} changeAliasName={changeAliasInput} />
-      <AliasCommand
-        aliasItem={aliasItem}
-        changeAliasCommand={changeAliasInput}
-      />
-    </div>
-  );
-};
+const AliasData: React.FC<Props> = React.memo(
+  ({ aliasItem, changeAliasInput }) => {
+    return (
+      <div id={aliasItem.id.toString()} className={styles.layout}>
+        <AliasName aliasItem={aliasItem} changeAliasName={changeAliasInput} />
+        <AliasCommand
+          aliasItem={aliasItem}
+          changeAliasCommand={changeAliasInput}
+        />
+      </div>
+    );
+  }
+);
+
+AliasData.displayName = 'AliasData';
 
 export default AliasData;

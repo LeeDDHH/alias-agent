@@ -9,15 +9,19 @@ interface Props {
   ) => void;
 }
 
-const AliasName: React.FC<Props> = ({ aliasItem, changeAliasName }) => {
-  return (
-    <input
-      type="text"
-      name="aliasName"
-      onChange={(e) => changeAliasName(e, aliasItem.id, 'name')}
-      value={aliasItem.name}
-    />
-  );
-};
+const AliasName: React.FC<Props> = React.memo(
+  ({ aliasItem, changeAliasName }) => {
+    return (
+      <input
+        type="text"
+        name="aliasName"
+        onChange={(e) => changeAliasName(e, aliasItem.id, 'name')}
+        value={aliasItem.name}
+      />
+    );
+  }
+);
+
+AliasName.displayName = 'AliasName';
 
 export default AliasName;
