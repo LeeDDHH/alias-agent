@@ -1,14 +1,14 @@
 import { mainWindow, settingWindow, renderSettingWindow } from './Windows';
 import { isDev } from '../../../lib/Const';
 
-const mainWindowsEvents = () => {
+const mainWindowsEvents = (): void => {
   mainWindow.on('blur', () => {
     if (!isDev) mainWindow.hide();
     mainWindow.webContents.send('initInputValue');
   });
 };
 
-const mainViewToggle = () => {
+const mainViewToggle = (): void => {
   if (mainWindow.isFocused()) {
     mainWindow.webContents.send('initInputValue');
     return mainWindow.hide();
@@ -16,7 +16,7 @@ const mainViewToggle = () => {
   mainWindow.show();
 };
 
-const settingWindowToggle = () => {
+const settingWindowToggle = (): void => {
   !settingWindow || settingWindow.isDestroyed()
     ? renderSettingWindow()
     : settingWindow.destroy();

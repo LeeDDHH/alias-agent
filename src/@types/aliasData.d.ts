@@ -5,3 +5,10 @@ declare type AliasItem = {
 };
 
 declare type AliasData = AliasItem[];
+
+declare type AliasDataList = {
+  alias: AliasData | [];
+  meta: {
+    shellType: string;
+  };
+};

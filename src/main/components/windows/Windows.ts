@@ -11,7 +11,7 @@ import { isDev, mainViewPort, settingViewPort } from '../../../lib/Const';
 let mainWindow: BrowserWindow;
 let settingWindow: BrowserWindow;
 
-const _createMainWindow = async () => {
+const _createMainWindow = async (): Promise<void> => {
   const display = screen.getPrimaryDisplay();
 
   const defaultWindowWidth = display.bounds.width / 5;
@@ -54,7 +54,7 @@ const _createMainWindow = async () => {
   // mainWindow.once('ready-to-show', () => mainWindow.hide());
 };
 
-const _createSettingWindow = async () => {
+const _createSettingWindow = async (): Promise<void> => {
   settingWindow = new BrowserWindow({
     width: 800,
     height: 600,
@@ -85,7 +85,7 @@ const _createSettingWindow = async () => {
   settingWindow.show();
 };
 
-const _bootReactDev = async () => {
+const _bootReactDev = async (): Promise<void> => {
   // 開発時には React Developer Tools をロードする
   await bootReactDevtools();
 
@@ -94,7 +94,7 @@ const _bootReactDev = async () => {
   });
 };
 
-const _loadMainWindowRendererProcess = async () => {
+const _loadMainWindowRendererProcess = async (): Promise<void> => {
   // レンダラープロセスをロード
   if (isDev) {
     await mainWindow.loadURL(`http://localhost:${mainViewPort}`);
@@ -109,7 +109,7 @@ const _loadMainWindowRendererProcess = async () => {
   }
 };
 
-const _loadSettingWindowRendererProcess = async () => {
+const _loadSettingWindowRendererProcess = async (): Promise<void> => {
   // レンダラープロセスをロード
   if (isDev) {
     await settingWindow.loadURL(`http://localhost:${settingViewPort}`);
@@ -125,7 +125,7 @@ const _loadSettingWindowRendererProcess = async () => {
 };
 
 //BrowserWindowインスタンスを作成する関数
-const bootWindow = async () => {
+const bootWindow = async (): Promise<void> => {
   await _createMainWindow();
   mainWindowsEvents();
 
@@ -135,7 +135,7 @@ const bootWindow = async () => {
   await _loadMainWindowRendererProcess();
 };
 
-const renderSettingWindow = async () => {
+const renderSettingWindow = async (): Promise<void> => {
   await _createSettingWindow();
 
   // 開発時にはデベロッパーツールを開く
@@ -148,16 +148,16 @@ const renderSettingWindow = async () => {
   await _loadSettingWindowRendererProcess();
 };
 
-const _destroyMainWindow = () => {
+const _destroyMainWindow = (): void => {
   if (!mainWindow.isDestroyed) return mainWindow.destroy();
 };
 
-const _destroySettingWindow = () => {
+const _destroySettingWindow = (): void => {
   if (!!settingWindow && !settingWindow.isDestroyed)
     return settingWindow.destroy();
 };
 
-const destroyAllWindow = () => {
+const destroyAllWindow = (): void => {
   _destroyMainWindow();
   _destroySettingWindow();
 };

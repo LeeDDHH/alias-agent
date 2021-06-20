@@ -6,7 +6,7 @@ import { trayImage } from '../../../lib/Const';
 
 let tray = null;
 
-const createTray = () => {
+const createTray = (): void => {
   const image = path.join(app.getAppPath(), trayImage);
   tray = new Tray(image);
   const contextMenu = Menu.buildFromTemplate(trayMenu);

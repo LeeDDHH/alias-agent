@@ -12,7 +12,7 @@ import { session } from 'electron';
 import { reactDevtools, extDir } from '../../../lib/Const';
 
 // React Devtools の場所を探す関数
-const searchReactDevtools = async () => {
+const searchReactDevtools = async (): Promise<string | void | undefined> => {
   // React Devtools フォルダの絶対パス
   const dirPath = path.join(os.homedir(), extDir, reactDevtools);
 
@@ -28,14 +28,14 @@ const searchReactDevtools = async () => {
 };
 
 // react developer toolsがローカルにない場合、インストールする
-const installDevExtension = async () => {
+const installDevExtension = async (): Promise<void> => {
   await installExtension(REACT_DEVELOPER_TOOLS)
     .then((name) => console.log(`Added Extension:  ${name}`))
     .catch((err) => console.log('An error occurred: ', err));
 };
 
 // React Devtools を起動する関数
-export const bootReactDevtools = async () => {
+export const bootReactDevtools = async (): Promise<void> => {
   const extPath = await searchReactDevtools();
   if (!extPath) {
     installDevExtension();

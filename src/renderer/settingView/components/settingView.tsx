@@ -6,38 +6,38 @@ import AliasData from './alias/aliasData';
 
 import styles from '../../styles/settingView.module.css';
 
-const SettingView = () => {
+const SettingView = React.memo(() => {
   const [keys, setKeys] = useState<HotKeys>([]);
   const [alias, setAlias] = useState<AliasData>([]);
   // const [input, setInput] = useState('');
   // const [message, setMessage] = useState<string | null>('');
-  const getMainViewToggleShortcut = async () => {
+  const getMainViewToggleShortcut = useCallback(async () => {
     const mainViewToggleShortcut: string = await window.ipcApi.handleGetMainViewToggleShortcut();
     const shortcutKeyArray: HotKeys = mainViewToggleShortcut.split('+');
     setKeys(shortcutKeyArray);
-  };
+  }, []);
 
-  const generateEmptyAliasItem = (maxId: number) => {
+  const generateEmptyAliasItem = useCallback((maxId: number) => {
     return { id: maxId + 1, name: '', value: '' };
-  };
+  }, []);
 
-  const getNextAliasItemId = (aliasData: AliasData) => {
+  const getNextAliasItemId = useCallback((aliasData: AliasData) => {
     const idArray = () => {
       return aliasData.map((item: AliasItem) => {
         return item.id;
       });
     };
     return Math.max(...idArray());
-  };
+  }, []);
 
-  const getAliasData = async () => {
+  const getAliasData = useCallback(async () => {
     const aliasData: AliasData = await window.ipcApi.handleGetAliasData();
-    if (isUndefinedOrNull(aliasData))
+    if (isUndefinedOrNull<AliasData>(aliasData))
       return setAlias([generateEmptyAliasItem(-1)]);
     const maxId = getNextAliasItemId(aliasData);
     aliasData.push(generateEmptyAliasItem(maxId));
     setAlias(aliasData);
-  };
+  }, []);
 
   useEffect(() => {
     //   const handleMessage = (event, message) => setMessage(message)
@@ -47,9 +47,9 @@ const SettingView = () => {
     //   }
     getMainViewToggleShortcut();
     getAliasData();
-  }, []);
+  }, [getAliasData, getMainViewToggleShortcut]);
 
-  const resetKeys = () => setKeys([]);
+  const resetKeys = useCallback(() => setKeys([]), []);
 
   // const handleSubmit = async (event: React.FormEvent) => {
   //   event.preventDefault();
@@ -57,15 +57,18 @@ const SettingView = () => {
   //   setMessage(result);
   // };
 
-  const keyDownAction = (evt: React.KeyboardEvent<HTMLInputElement>) => {
-    const newKeys = convertKeyboardKey(evt, keys);
-    setKeys(newKeys);
-  };
+  const keyDownAction = useCallback(
+    (evt: React.KeyboardEvent<HTMLInputElement>) => {
+      const newKeys = convertKeyboardKey(evt, keys);
+      setKeys(newKeys);
+    },
+    [keys]
+  );
 
-  const visualKeys = () => {
+  const visualKeys = useMemo(() => {
     if (keys.length === 0) return '';
     return keys.join('+');
-  };
+  }, [keys]);
 
   const findAliasIndex = useCallback(
     (id: number) => alias.findIndex((i) => i.id === id),
@@ -79,9 +82,9 @@ const SettingView = () => {
       type: 'name' | 'value'
     ) => {
       // 変更するAliasのインデックスを配列から特定する
-      const aliasIndex = findAliasIndex(id);
+      const aliasIndex: number = findAliasIndex(id);
       // 変更するAliasが見つからなかったら何も変更しない
-      if (isUndefinedOrNull(aliasIndex)) return;
+      if (isUndefinedOrNull<number>(aliasIndex)) return;
 
       // Aliasを新しい配列にして、Aliasを変更する
       const newAlias = alias.concat();
@@ -130,7 +133,7 @@ const SettingView = () => {
         className={`${styles.width100}`}
         onKeyDown={(e) => keyDownAction(e)}
         readOnly={true}
-        value={visualKeys()}
+        value={visualKeys}
       />
       <input type="button" onClick={resetKeys} value={'Clear'} />
       {viewAliasData}
@@ -146,6 +149,8 @@ const SettingView = () => {
       </form> */}
     </div>
   );
-};
+});
+
+SettingView.displayName = 'SettingView';
 
 export default SettingView;

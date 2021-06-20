@@ -7,7 +7,7 @@ import _initialData from '../../../data/alias';
 
 let aliasData: AliasData;
 
-const getAliasDataFromFile = async () => {
+const getAliasDataFromFile = async (): Promise<AliasDataList> => {
   try {
     return await readJsonFile(getAliasSettingsFilePath);
   } catch (e) {
@@ -16,10 +16,13 @@ const getAliasDataFromFile = async () => {
   }
 };
 
-const initAliasData = async () => {
-  let data;
+const initAliasData = async (): Promise<void> => {
+  let data: AliasDataList | null;
   try {
     data = await getAliasDataFromFile();
+    if (!data || !data.alias || data.alias.length < 1) {
+      aliasData = _initialData.alias;
+    }
     aliasData = data.alias;
   } catch (e) {
     console.log('aliasSettingsFile read failed: ' + e);
@@ -27,12 +30,12 @@ const initAliasData = async () => {
   }
 };
 
-const _findAliasName = (command: string) => {
-  const aliasName = aliasData.find((item) => item.name === command);
-  return aliasName ?? false;
+const _findAliasName = (command: string): AliasItem | false => {
+  const aliasItem = aliasData.find((item) => item.name === command);
+  return aliasItem ?? false;
 };
 
-const execCommand = async (command: string) => {
+const execCommand = async (command: string): Promise<boolean> => {
   /*
     IDEA
     - 受け取った文字列をスペース区切りで分割する

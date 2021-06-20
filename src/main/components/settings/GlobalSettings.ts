@@ -4,7 +4,7 @@ import { makeFileIfNotExists } from '../../../lib/Utility';
 import { globalSettingJsonName } from '../../../lib/Const';
 import GlobalSetting from '../../../data/globalSetting';
 
-const setGlobalSettings = async () => {
+const setGlobalSettings = async (): Promise<void> => {
   const globalSettingsFilePath = path.join(
     app.getPath('userData'),
     globalSettingJsonName

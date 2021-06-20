@@ -1,6 +1,6 @@
 import * as fs from 'fs-extra';
 
-const isExistFile = (filePath: string) => {
+const isExistFile = (filePath: string): boolean => {
   try {
     fs.statSync(filePath);
   } catch (e) {
@@ -12,7 +12,7 @@ const isExistFile = (filePath: string) => {
   return true;
 };
 
-const makeDirIfNotExists = async (dirPath: string) => {
+const makeDirIfNotExists = async (dirPath: string): Promise<boolean> => {
   if (!fs.existsSync(dirPath)) {
     try {
       await fs.promises.mkdir(dirPath, { recursive: true });
@@ -25,11 +25,15 @@ const makeDirIfNotExists = async (dirPath: string) => {
   return true;
 };
 
-const makeFileIfNotExists = async (filePath: string, data: object) => {
+const makeFileIfNotExists = async (
+  filePath: string,
+  data: object
+): Promise<boolean> => {
   if (!isExistFile(filePath)) return await writeSync(filePath, data);
+  return true;
 };
 
-const writeSync = async (filePath: string, data: object) => {
+const writeSync = async (filePath: string, data: object): Promise<boolean> => {
   try {
     await fs.promises.writeFile(filePath, JSON.stringify(data, null, 2), {
       encoding: 'utf-8',
@@ -41,11 +45,12 @@ const writeSync = async (filePath: string, data: object) => {
   return true;
 };
 
-const readJsonFile = async (filePath: string) => {
+const readJsonFile = async (filePath: string): Promise<any | null> => {
   let content;
   try {
     content = await fs.promises.readFile(filePath, 'utf-8');
-    return JSON.parse(content);
+    const result = JSON.parse(content);
+    return result;
   } catch (e) {
     console.log('read file failed: ' + e);
     return null;

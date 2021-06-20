@@ -1,3 +1,4 @@
-const isUndefinedOrNull = (v: any) => typeof v === 'undefined' || v == null;
+const isUndefinedOrNull = <T>(v: T): boolean | null =>
+  typeof v === 'undefined' || v == null;
 
 export { isUndefinedOrNull };

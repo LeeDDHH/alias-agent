@@ -3,12 +3,15 @@ import React from 'react';
 import { modifierKeys, convertModifierKey } from '../data/keyboardData';
 
 // JavaScriptのコード名から、Electronで扱うコードに対応するコードがあれば、変換する
-const _convertElectronKey = (code: string) => {
+const _convertElectronKey = (code: string): string => {
   return convertModifierKey[code] ?? code;
 };
 
 // キー配列にある一般キーを最後に入力された一般キーにする
-const _setLastInputNormalKey = (codes: HotKeys, convertedKey: string) => {
+const _setLastInputNormalKey = (
+  codes: HotKeys,
+  convertedKey: string
+): string[] => {
   return codes.map((key: string) => {
     if (!modifierKeys.includes(key) && !modifierKeys.includes(convertedKey))
       return convertedKey;
@@ -17,10 +20,11 @@ const _setLastInputNormalKey = (codes: HotKeys, convertedKey: string) => {
 };
 
 // 重複しているキーを排除する
-const _reduceDuplicatedKeys = (codes: HotKeys) => Array.from(new Set(codes));
+const _reduceDuplicatedKeys = (codes: HotKeys): string[] =>
+  Array.from(new Set(codes));
 
-const _definedOrderKeys = (codes: HotKeys) => {
-  let newArray: string[] = [];
+const _definedOrderKeys = (codes: HotKeys): string[] => {
+  const newArray: string[] = [];
   let mustLastAdd = '';
 
   codes.map((key: string) => {
@@ -36,7 +40,7 @@ const _definedOrderKeys = (codes: HotKeys) => {
 const convertKeyboardKey = (
   e: React.KeyboardEvent<HTMLInputElement>,
   keys: HotKeys
-) => {
+): string[] => {
   // 入力されたキーを取得
   const code: string = e.nativeEvent.code;
   const convertedKey = _convertElectronKey(code);

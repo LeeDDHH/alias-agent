@@ -9,7 +9,7 @@ const getAliasSettingsFilePath = path.join(
   aliasSettingJsonName
 );
 
-const initAliasSettings = async () => {
+const initAliasSettings = async (): Promise<void> => {
   await makeFileIfNotExists(getAliasSettingsFilePath, AliasSetting);
 };
 

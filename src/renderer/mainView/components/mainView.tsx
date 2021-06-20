@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 
 import styles from '../../styles/mainView.module.css';
 
-const MainView = () => {
+const MainView = React.memo(() => {
   const [input, setInput] = useState('');
 
   useEffect(() => {
@@ -14,15 +14,18 @@ const MainView = () => {
     window.ipcApi.handleInitInputValue(resetInput);
   }, []);
 
-  const resetInput = () => {
+  const resetInput = useCallback(() => {
     setInput('');
-  };
+  }, []);
 
-  const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
-    await window.ipcApi.handleExecAlias(input);
-    resetInput();
-  };
+  const handleSubmit = useCallback(
+    async (event: React.FormEvent) => {
+      event.preventDefault();
+      await window.ipcApi.handleExecAlias(input);
+      resetInput();
+    },
+    [input, resetInput]
+  );
 
   /*
     IDEA
@@ -33,10 +36,13 @@ const MainView = () => {
       - 入力した文字列をもとに候補のaliasが複数あれば、tabで他の候補も表示する
         - 仕様的に衝突すると思うので、やり方は別途考える
    */
-  const handleKeyEvent = (event: React.ChangeEvent<HTMLInputElement>) => {
-    event.preventDefault();
-    setInput(event.target.value);
-  };
+  const handleKeyEvent = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      event.preventDefault();
+      setInput(event.target.value);
+    },
+    []
+  );
 
   return (
     <div className={`${styles.height100} ${styles.inputLayer}`}>
@@ -53,6 +59,8 @@ const MainView = () => {
       </form>
     </div>
   );
-};
+});
+
+MainView.displayName = 'MainView';
 
 export default MainView;

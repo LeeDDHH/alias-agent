@@ -8,12 +8,12 @@ import {
   defaultMainViewToggleShortcut,
 } from '../../../lib/Const';
 
-const getGlobalSettingsFilePath = path.join(
+const getGlobalSettingsFilePath: string = path.join(
   app.getPath('userData'),
   globalSettingJsonName
 );
 
-const getMainViewToggleShortcut = async () => {
+const getMainViewToggleShortcut = async (): Promise<string> => {
   let mainViewToggleShortcut = defaultMainViewToggleShortcut;
 
   if (isExistFile(getGlobalSettingsFilePath)) {
@@ -29,8 +29,8 @@ const getMainViewToggleShortcut = async () => {
   return mainViewToggleShortcut;
 };
 
-const setAllGlobalShortcut = async () => {
-  let mainViewToggleShortcut = await getMainViewToggleShortcut();
+const setAllGlobalShortcut = async (): Promise<void> => {
+  const mainViewToggleShortcut = await getMainViewToggleShortcut();
 
   try {
     globalShortcut.register(mainViewToggleShortcut, () => {
@@ -43,8 +43,8 @@ const setAllGlobalShortcut = async () => {
   console.log(globalShortcut.isRegistered(defaultMainViewToggleShortcut));
 };
 
-const unSetAllGlobalShortcut = async () => {
-  let mainViewToggleShortcut = await getMainViewToggleShortcut();
+const unSetAllGlobalShortcut = async (): Promise<void> => {
+  const mainViewToggleShortcut = await getMainViewToggleShortcut();
   globalShortcut.unregister(mainViewToggleShortcut);
   globalShortcut.unregisterAll();
 };
