@@ -9,7 +9,8 @@ const setGlobalSettings = async (): Promise<void> => {
     app.getPath('userData'),
     globalSettingJsonName
   );
-  await makeFileIfNotExists(globalSettingsFilePath, GlobalSetting);
+  const data = GlobalSetting;
+  await makeFileIfNotExists(globalSettingsFilePath, data);
 };
 
 export { setGlobalSettings };
