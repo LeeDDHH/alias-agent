@@ -2,7 +2,11 @@
 
 import { ipcMain, IpcMainInvokeEvent } from 'electron';
 import { getMainViewToggleShortcut } from '../components/globalShortcuts/GlobalShortcut';
-import { getAliasDataFromFile, execCommand } from '../components/alias/alias';
+import {
+  getAliasDataOnMemory,
+  execCommand,
+  saveAliasData,
+} from '../components/alias/alias';
 import { execFailedDialog } from '../components/dialog/dialog';
 
 ipcMain.handle('message', (event: IpcMainInvokeEvent, message) => {
@@ -14,17 +18,14 @@ ipcMain.handle('getMainViewToggleShortcut', async () => {
 });
 
 ipcMain.handle('getAliasData', async () => {
-  const aliasData = await getAliasDataFromFile();
-  return aliasData.alias;
+  const aliasData = getAliasDataOnMemory();
+  return aliasData;
 });
 
 ipcMain.handle(
   'saveAliasData',
-  async (event: IpcMainInvokeEvent, aliasData: AliasData) => {
-    console.log(aliasData);
-    // const result = await saveAliasData(aliasData);
-    // const aliasData = await getAliasDataFromFile();
-    // return aliasData.alias;
+  async (event: IpcMainInvokeEvent, aliasData: AliasData): Promise<boolean> => {
+    return await saveAliasData(aliasData);
   }
 );
 

@@ -9,14 +9,14 @@ contextBridge.exposeInMainWorld('ipcApi', {
       callback();
     });
   },
-  handleGetMainViewToggleShortcut: () => {
-    return ipcRenderer.invoke('getMainViewToggleShortcut');
+  handleGetMainViewToggleShortcut: async () => {
+    return await ipcRenderer.invoke('getMainViewToggleShortcut');
   },
-  handleGetAliasData: () => {
-    return ipcRenderer.invoke('getAliasData');
+  handleGetAliasData: async () => {
+    return await ipcRenderer.invoke('getAliasData');
   },
-  handleSaveAliasData: (aliasData: AliasData) => {
-    return ipcRenderer.invoke('saveAliasData', aliasData);
+  handleSaveAliasData: async (aliasData: AliasData): Promise<boolean> => {
+    return await ipcRenderer.invoke('saveAliasData', aliasData);
   },
   handleExecAlias: async (command: string) => {
     return await ipcRenderer.invoke('execAlias', command);
