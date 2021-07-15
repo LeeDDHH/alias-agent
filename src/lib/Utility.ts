@@ -33,7 +33,7 @@ const makeFileIfNotExists = async (
   return true;
 };
 
-const writeSync = async (filePath: string, data: object): Promise<boolean> => {
+const writeSync = async <T>(filePath: string, data: T): Promise<boolean> => {
   try {
     await fs.promises.writeFile(filePath, JSON.stringify(data, null, 2), {
       encoding: 'utf-8',
@@ -57,4 +57,10 @@ const readJsonFile = async (filePath: string): Promise<any | null> => {
   }
 };
 
-export { isExistFile, makeDirIfNotExists, makeFileIfNotExists, readJsonFile };
+export {
+  isExistFile,
+  makeDirIfNotExists,
+  makeFileIfNotExists,
+  writeSync,
+  readJsonFile,
+};
