@@ -9,6 +9,7 @@ import styles from '../../styles/settingView.module.css';
 const SettingView = React.memo(() => {
   const [keys, setKeys] = useState<HotKeys>([]);
   const [alias, setAlias] = useState<AliasData>([]);
+  const [editItemId, setEditItemId] = useState<number>(-1);
   // const [input, setInput] = useState('');
   // const [message, setMessage] = useState<string | null>('');
   const getMainViewToggleShortcut = useCallback(async (): Promise<void> => {
@@ -30,14 +31,21 @@ const SettingView = React.memo(() => {
     return Math.max(...idArray());
   }, []);
 
+  const addEmptyAliasItem = useCallback(
+    (aliasData: AliasData) => {
+      const maxId = getNextAliasItemId(aliasData);
+      aliasData.push(generateEmptyAliasItem(maxId));
+      setAlias(aliasData);
+    },
+    [getNextAliasItemId, generateEmptyAliasItem]
+  );
+
   const getAliasData = useCallback(async (): Promise<void> => {
     const aliasData: AliasData = await window.ipcApi.handleGetAliasData();
     if (isUndefinedOrNull<AliasData>(aliasData))
       return setAlias([generateEmptyAliasItem(-1)]);
-    const maxId = getNextAliasItemId(aliasData);
-    aliasData.push(generateEmptyAliasItem(maxId));
-    setAlias(aliasData);
-  }, [generateEmptyAliasItem, getNextAliasItemId]);
+    addEmptyAliasItem(aliasData);
+  }, [generateEmptyAliasItem, addEmptyAliasItem]);
 
   useEffect(() => {
     //   const handleMessage = (event, message) => setMessage(message)
@@ -98,13 +106,30 @@ const SettingView = React.memo(() => {
     [alias, findAliasIndex]
   );
 
+  const changeEditItemId = useCallback(
+    (evt: React.FocusEvent<HTMLInputElement>) => {
+      console.log(evt.currentTarget);
+    },
+    []
+  );
+
+  const saveAliasItem = useCallback(
+    async (evt: React.FocusEvent): Promise<void> => {
+      evt.preventDefault();
+    },
+    []
+  );
+
   const saveAlias = useCallback(
-    (evt: React.FormEvent): void => {
+    async (evt: React.FormEvent): Promise<void> => {
       console.log(alias);
       evt.preventDefault();
-      window.ipcApi.handleSaveAliasData(alias);
+      const result = await window.ipcApi.handleSaveAliasData(alias);
+      if (result) {
+        addEmptyAliasItem(alias);
+      }
     },
-    [alias]
+    [alias, addEmptyAliasItem]
   );
 
   const viewAliasData = useMemo((): JSX.Element | '' => {
