@@ -1,11 +1,16 @@
 import util from 'util';
 import { exec } from 'child_process';
-import { readJsonFile } from '../../../lib/Utility';
+import { writeSync, readJsonFile } from '../../../lib/Utility';
 import { getAliasSettingsFilePath } from '../settings/alias';
+import { validateAliasData } from '../../../lib/Validate';
 
 import _initialData from '../../../data/alias';
 
-let aliasData: AliasData;
+let aliasDataList: AliasDataList;
+
+const getAliasDataOnMemory = (): AliasData => {
+  return aliasDataList.alias;
+};
 
 const getAliasDataFromFile = async (): Promise<AliasDataList> => {
   try {
@@ -21,17 +26,18 @@ const initAliasData = async (): Promise<void> => {
   try {
     data = await getAliasDataFromFile();
     if (!data || !data.alias || data.alias.length < 1) {
-      aliasData = _initialData.alias;
+      aliasDataList = _initialData;
+    } else {
+      aliasDataList = data;
     }
-    aliasData = data.alias;
   } catch (e) {
     console.log('aliasSettingsFile read failed: ' + e);
-    aliasData = _initialData.alias;
+    aliasDataList = _initialData;
   }
 };
 
 const _findAliasName = (command: string): AliasItem | false => {
-  const aliasItem = aliasData.find((item) => item.name === command);
+  const aliasItem = aliasDataList.alias.find((item) => item.name === command);
   return aliasItem ?? false;
 };
 
@@ -73,8 +79,32 @@ const execCommand = async (command: string): Promise<boolean> => {
   // return { result: result };
 };
 
-const validateAliasData = () => {};
+/*
+    保存前の処理
+    - ◯バリデーション
+    - ◯try...catch
+    - ◯保存
+  */
+const saveAliasData = async (
+  modifiedAliasData: AliasData
+): Promise<boolean> => {
+  if (!validateAliasData(modifiedAliasData)) return false;
 
-const saveAliasData = async (aliasData: AliasData) => {};
+  aliasDataList.alias = modifiedAliasData;
 
-export { aliasData, getAliasDataFromFile, initAliasData, execCommand };
+  try {
+    return writeSync<AliasDataList>(getAliasSettingsFilePath, aliasDataList);
+  } catch (e) {
+    console.log('[alias]' + 'saveAliasData: ' + e);
+    return false;
+  }
+};
+
+export {
+  aliasDataList,
+  getAliasDataOnMemory,
+  getAliasDataFromFile,
+  initAliasData,
+  execCommand,
+  saveAliasData,
+};
