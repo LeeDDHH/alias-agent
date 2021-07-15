@@ -1,8 +1,12 @@
 import { app } from 'electron';
 
-import { settingWindowToggle } from '../windows/WindowsEvents';
+import { mainViewToggle, settingWindowToggle } from '../windows/WindowsEvents';
 
 const trayMenu: Electron.MenuItemConstructorOptions[] = [
+  {
+    label: 'alias-agent',
+    click: mainViewToggle,
+  },
   {
     label: '設定',
     click: settingWindowToggle,
