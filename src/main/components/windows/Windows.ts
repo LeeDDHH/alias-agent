@@ -148,6 +148,20 @@ const renderSettingWindow = async (): Promise<void> => {
   await _loadSettingWindowRendererProcess();
 };
 
+const _closeMainWindow = (): void => {
+  if (!mainWindow.isDestroyed) return mainWindow.close();
+};
+
+const _closeSettingWindow = (): void => {
+  if (!!settingWindow && !settingWindow.isDestroyed)
+    return settingWindow.close();
+};
+
+const closeAllWindow = (): void => {
+  _closeMainWindow();
+  _closeSettingWindow();
+};
+
 const _destroyMainWindow = (): void => {
   if (!mainWindow.isDestroyed) return mainWindow.destroy();
 };
@@ -167,5 +181,6 @@ export {
   settingWindow,
   bootWindow,
   renderSettingWindow,
+  closeAllWindow,
   destroyAllWindow,
 };

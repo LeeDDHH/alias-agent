@@ -6,8 +6,12 @@ import fs from 'fs';
 import path from 'path';
  */
 import { app } from 'electron';
-import { destroyAllWindow, bootWindow } from './components/windows/Windows';
-import { tray, createTray } from './components/tray/Tray';
+import {
+  closeAllWindow,
+  destroyAllWindow,
+  bootWindow,
+} from './components/windows/Windows';
+import { createTray } from './components/tray/Tray';
 import './ipc/ipcMainActions';
 import { prepareApp } from './components/prepareApp/prepareApp';
 import { unSetAllGlobalShortcut } from './components/globalShortcuts/GlobalShortcut';
@@ -32,6 +36,6 @@ app.once('window-all-closed', async () => {
   app.quit();
 });
 
-app.on('before-quit', () => destroyAllWindow());
+app.on('before-quit', () => closeAllWindow());
 
 app.on('quit', () => destroyAllWindow());
