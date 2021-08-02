@@ -40,3 +40,5 @@ declare type GlobalShortCutRegisterIndex =
   | 'alreadyRegisteredButUse'
   | 'registerSuccess'
   | 'registerable';
+
+declare type NoNameFUnctionReturnVoid = () => void;

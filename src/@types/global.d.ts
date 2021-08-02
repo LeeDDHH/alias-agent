@@ -1,6 +1,6 @@
 export default interface IpcApi {
   handleMessage: (message: string) => Promise<null | string>;
-  handleInitInputValue: (callback: Function) => void;
+  handleInitInputValue: (callback: NoNameFUnctionReturnVoid) => void;
   handleGetMainViewToggleShortcut: () => string;
   handleGetGlobalShortcutStatus: () => Promise<GlobalShortCutRegisterIndex>;
   handleSetMainViewToggleShortcut: (
