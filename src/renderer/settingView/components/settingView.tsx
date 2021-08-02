@@ -21,7 +21,7 @@ const SettingView = React.memo(() => {
   // const [input, setInput] = useState('');
   // const [message, setMessage] = useState<string | null>('');
   const getMainViewToggleShortcut = useCallback(async (): Promise<void> => {
-    const mainViewToggleShortcut: string = window.ipcApi.handleGetMainViewToggleShortcut();
+    const mainViewToggleShortcut: string = await window.ipcApi.handleGetMainViewToggleShortcut();
     const globalShortcutStatus: GlobalShortCutRegisterIndex = await window.ipcApi.handleGetGlobalShortcutStatus();
     const shortcutKeyArray: HotKeys =
       mainViewToggleShortcut.length > 0
