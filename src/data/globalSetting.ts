@@ -1,3 +1,3 @@
 export default {
-  globalShortcut: 'Control+Space',
+  globalShortcut: '',
 };

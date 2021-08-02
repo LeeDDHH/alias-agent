@@ -1,11 +1,11 @@
 import { setGlobalSettings } from '../settings/GlobalSettings';
-import { setAllGlobalShortcut } from '../globalShortcuts/GlobalShortcut';
+import { initGlobalShortCut } from '../globalShortcuts/GlobalShortcut';
 import { initAliasSettings } from '../settings/alias';
 import { initAliasData } from '../alias/alias';
 
 const prepareApp = async (): Promise<void> => {
   await setGlobalSettings();
-  await setAllGlobalShortcut();
+  await initGlobalShortCut();
   await initAliasSettings();
   await initAliasData();
 };

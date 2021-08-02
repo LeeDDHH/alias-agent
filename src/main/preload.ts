@@ -12,6 +12,12 @@ contextBridge.exposeInMainWorld('ipcApi', {
   handleGetMainViewToggleShortcut: async () => {
     return await ipcRenderer.invoke('getMainViewToggleShortcut');
   },
+  handleGetGlobalShortcutStatus: async () => {
+    return await ipcRenderer.invoke('getGlobalShortcutStatus');
+  },
+  handleSetMainViewToggleShortcut: async (keys: HotKeys) => {
+    return await ipcRenderer.invoke('setMainViewToggleShortcut', keys);
+  },
   handleGetAliasData: async () => {
     return await ipcRenderer.invoke('getAliasData');
   },

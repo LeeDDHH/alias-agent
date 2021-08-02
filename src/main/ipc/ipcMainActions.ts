@@ -1,7 +1,11 @@
 'use strict';
 
 import { ipcMain, IpcMainInvokeEvent } from 'electron';
-import { getMainViewToggleShortcut } from '../components/globalShortcuts/GlobalShortcut';
+import {
+  updateGlobalShortCut,
+  getCurrentGlobalShortcutStatus,
+  getCurrentGlobalShortcut,
+} from '../components/globalShortcuts/GlobalShortcut';
 import {
   getAliasDataOnMemory,
   execCommand,
@@ -13,9 +17,20 @@ ipcMain.handle('message', (event: IpcMainInvokeEvent, message) => {
   return message + 'add';
 });
 
-ipcMain.handle('getMainViewToggleShortcut', async () => {
-  return await getMainViewToggleShortcut();
+ipcMain.handle('getMainViewToggleShortcut', () => {
+  return getCurrentGlobalShortcut();
 });
+
+ipcMain.handle('getGlobalShortcutStatus', () => {
+  return getCurrentGlobalShortcutStatus();
+});
+
+ipcMain.handle(
+  'setMainViewToggleShortcut',
+  async (evetn: IpcMainInvokeEvent, keys: HotKeys) => {
+    return await updateGlobalShortCut(keys);
+  }
+);
 
 ipcMain.handle('getAliasData', async () => {
   const aliasData = getAliasDataOnMemory();

@@ -4,18 +4,32 @@ import { isUndefinedOrNull } from '../../../lib/TypeCheck';
 import { convertKeyboardKey } from '../../../lib/KeyboardLayout';
 import AliasData from './alias/aliasData';
 
+import { globalShortCutRegisterResult } from '../../../data/globalShortCutRegisterResult';
+
 import styles from '../../styles/settingView.module.css';
 
 const SettingView = React.memo(() => {
   const [keys, setKeys] = useState<HotKeys>([]);
+  const [
+    globalShortcutStatus,
+    setGlobalShortcutStatus,
+  ] = useState<GlobalShortCutRegisterIndex>(
+    globalShortCutRegisterResult.canNotRegistered.index
+  );
   const [alias, setAlias] = useState<AliasData>([]);
   const [editItemId, setEditItemId] = useState<number>(-1);
   // const [input, setInput] = useState('');
   // const [message, setMessage] = useState<string | null>('');
   const getMainViewToggleShortcut = useCallback(async (): Promise<void> => {
-    const mainViewToggleShortcut: string = await window.ipcApi.handleGetMainViewToggleShortcut();
-    const shortcutKeyArray: HotKeys = mainViewToggleShortcut.split('+');
+    const mainViewToggleShortcut: string = window.ipcApi.handleGetMainViewToggleShortcut();
+    const globalShortcutStatus: GlobalShortCutRegisterIndex = await window.ipcApi.handleGetGlobalShortcutStatus();
+    const shortcutKeyArray: HotKeys =
+      mainViewToggleShortcut.length > 0
+        ? mainViewToggleShortcut.split('+')
+        : [];
     setKeys(shortcutKeyArray);
+    console.log('getMainViewToggleShortcut: ' + globalShortcutStatus);
+    setGlobalShortcutStatus(globalShortcutStatus);
   }, []);
 
   const generateEmptyAliasItem = useCallback((maxId: number): AliasItem => {
@@ -57,7 +71,13 @@ const SettingView = React.memo(() => {
     getAliasData();
   }, [getAliasData, getMainViewToggleShortcut]);
 
-  const resetKeys = useCallback((): void => setKeys([]), []);
+  const resetKeys = useCallback(async (): Promise<void> => {
+    setKeys([]);
+    const result: GlobalShortCutRegisterIndex = await window.ipcApi.handleSetMainViewToggleShortcut(
+      []
+    );
+    setGlobalShortcutStatus(result);
+  }, []);
 
   // const handleSubmit = async (event: React.FormEvent) => {
   //   event.preventDefault();
@@ -69,6 +89,16 @@ const SettingView = React.memo(() => {
     (evt: React.KeyboardEvent<HTMLInputElement>): void => {
       const newKeys = convertKeyboardKey(evt, keys);
       setKeys(newKeys);
+    },
+    [keys]
+  );
+
+  const saveGlobalShortCut = useCallback(
+    async (evt: React.FocusEvent<HTMLInputElement>): Promise<void> => {
+      const result: GlobalShortCutRegisterIndex = await window.ipcApi.handleSetMainViewToggleShortcut(
+        keys
+      );
+      setGlobalShortcutStatus(result);
     },
     [keys]
   );
@@ -152,15 +182,20 @@ const SettingView = React.memo(() => {
     return aliasLayout;
   }, [alias, changeAliasInput, saveAlias]);
 
+  console.log('globalShortcutStatus: ' + globalShortcutStatus);
   return (
     <div className={styles.height100}>
       <input
         className={`${styles.width100}`}
         onKeyDown={(e) => keyDownAction(e)}
+        onBlur={(e) => saveGlobalShortCut(e)}
         readOnly={true}
         value={visualKeys}
       />
       <input type="button" onClick={resetKeys} value={'Clear'} />
+      {globalShortcutStatus ? (
+        <span>{globalShortCutRegisterResult[globalShortcutStatus].text}</span>
+      ) : null}
       {viewAliasData}
       {/* {message && <p>{message}</p>}
 
