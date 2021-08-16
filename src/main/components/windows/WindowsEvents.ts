@@ -1,4 +1,9 @@
-import { mainWindow, settingWindow, renderSettingWindow } from './Windows';
+import {
+  mainWindow,
+  settingWindow,
+  renderSettingWindow,
+  closeSettingWindow,
+} from './Windows';
 import { isDev } from '../../../lib/Const';
 
 const mainWindowsEvents = (): void => {
@@ -19,7 +24,7 @@ const mainViewToggle = (): void => {
 const settingWindowToggle = (): void => {
   !settingWindow || settingWindow.isDestroyed()
     ? renderSettingWindow()
-    : settingWindow.destroy();
+    : closeSettingWindow();
 };
 
 export { mainWindowsEvents, mainViewToggle, settingWindowToggle };

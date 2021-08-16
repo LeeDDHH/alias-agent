@@ -2,7 +2,7 @@
 
 import path from 'path';
 import url from 'url';
-import { BrowserWindow, screen } from 'electron';
+import { app, BrowserWindow, screen } from 'electron';
 
 import { bootReactDevtools } from '../devtools/ReactDevtools';
 import { mainWindowsEvents } from './WindowsEvents';
@@ -146,6 +146,14 @@ const renderSettingWindow = async (): Promise<void> => {
   }
 
   await _loadSettingWindowRendererProcess();
+  // 設定画面表示時にはdockを表示する
+  app.dock.show();
+};
+
+const closeSettingWindow = (): void => {
+  // 設定画面を閉じたらdockを非表示する
+  app.dock.hide();
+  settingWindow.close();
 };
 
 const _closeMainWindow = (): void => {
@@ -181,6 +189,7 @@ export {
   settingWindow,
   bootWindow,
   renderSettingWindow,
+  closeSettingWindow,
   closeAllWindow,
   destroyAllWindow,
 };
