@@ -4,7 +4,7 @@ import { Configuration } from 'webpack';
 
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 
-import { isDev } from '../src/lib/Const';
+import { isDev } from '../src/lib/Compile';
 
 /** 共通設定 */
 const base: Configuration = {
@@ -16,6 +16,9 @@ const base: Configuration = {
   },
   resolve: {
     extensions: ['.js', '.ts', '.jsx', '.tsx', '.json'],
+    alias: {
+      '@': path.resolve(__dirname, '../src'),
+    },
   },
   output: {
     // バンドルファイルの出力先（ここではプロジェクト直下の 'dist' ディレクトリ）

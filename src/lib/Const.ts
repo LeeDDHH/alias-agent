@@ -1,8 +1,10 @@
 import os from 'os';
 
+import { systemPreferences } from 'electron';
+import { isDev } from './Compile';
+
 const isWin32 = os.platform() === 'win32';
 const isDarwin = os.platform() === 'darwin';
-const isDev = process.env.NODE_ENV === 'development';
 const reactDevtools = '/Default/Extensions/fmkadmapgofadopljbjfkapdkoienihi';
 const extDir = isDarwin
   ? // macOS
@@ -20,9 +22,9 @@ const mainViewPort = '4000';
 const settingViewPort = '4001';
 const globalSettingJsonName = 'global_setting.json';
 const aliasSettingJsonName = 'alias.json';
+const systemAccentColor = systemPreferences.getAccentColor();
 
 export {
-  isDev,
   reactDevtools,
   extDir,
   trayImage,
@@ -31,4 +33,5 @@ export {
   settingViewPort,
   globalSettingJsonName,
   aliasSettingJsonName,
+  systemAccentColor,
 };

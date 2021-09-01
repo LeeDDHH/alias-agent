@@ -6,7 +6,8 @@ import { app, BrowserWindow, screen } from 'electron';
 
 import { bootReactDevtools } from '../devtools/ReactDevtools';
 import { mainWindowsEvents } from './WindowsEvents';
-import { isDev, mainViewPort, settingViewPort } from '../../../lib/Const';
+import { mainViewPort, settingViewPort, systemAccentColor } from '@/lib/Const';
+import { isDev } from '@/lib/Compile';
 
 let mainWindow: BrowserWindow;
 let settingWindow: BrowserWindow;
@@ -83,6 +84,10 @@ const _createSettingWindow = async (): Promise<void> => {
     },
   });
   settingWindow.show();
+
+  settingWindow.on('focus', () => {
+    settingWindow.webContents.send('sendSystemAccentColor', systemAccentColor);
+  });
 };
 
 const _bootReactDev = async (): Promise<void> => {
