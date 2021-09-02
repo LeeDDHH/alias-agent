@@ -1,12 +1,15 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 
-import { isUndefinedOrNull } from '../../../lib/TypeCheck';
-import { convertKeyboardKey } from '../../../lib/KeyboardLayout';
+import { isUndefinedOrNull } from '@/lib/TypeCheck';
+import { convertKeyboardKey } from '@/lib/KeyboardLayout';
+import { isIdInAliasData } from '@/lib/Validate';
 import AliasData from './alias/aliasData';
+import ViewAliasData from './viewAlias/viewAliasData';
 
-import { globalShortCutRegisterResult } from '../../../data/globalShortCutRegisterResult';
+import { tempAliasItem } from '@/data/tempAliasItem';
+import { globalShortCutRegisterResult } from '@/data/globalShortCutRegisterResult';
 
-import styles from '../../styles/settingView.module.css';
+import styles from '@/renderer/styles/settingView.module.css';
 
 const SettingView = React.memo(() => {
   const [keys, setKeys] = useState<HotKeys>([]);
@@ -18,6 +21,10 @@ const SettingView = React.memo(() => {
   );
   const [alias, setAlias] = useState<AliasData>([]);
   const [editItemId, setEditItemId] = useState<number>(-1);
+  const [isEditAliasItem, setIsEditAliasItem] = useState<boolean>(false);
+  const [tempEditAliasItem, setTempEditAliasItem] = useState<AliasItem>(
+    tempAliasItem
+  );
   // const [input, setInput] = useState('');
   // const [message, setMessage] = useState<string | null>('');
   const getMainViewToggleShortcut = useCallback(async (): Promise<void> => {
@@ -58,8 +65,9 @@ const SettingView = React.memo(() => {
     const aliasData: AliasData = await window.ipcApi.handleGetAliasData();
     if (isUndefinedOrNull<AliasData>(aliasData))
       return setAlias([generateEmptyAliasItem(-1)]);
-    addEmptyAliasItem(aliasData);
-  }, [generateEmptyAliasItem, addEmptyAliasItem]);
+    setAlias(aliasData);
+    // addEmptyAliasItem(aliasData);
+  }, [generateEmptyAliasItem]);
 
   useEffect(() => {
     //   const handleMessage = (event, message) => setMessage(message)
@@ -113,27 +121,50 @@ const SettingView = React.memo(() => {
     [alias]
   );
 
+  const selectAliasItem = useCallback(
+    (evt: React.MouseEvent<HTMLElement>, id: Id) => {
+      if (!isIdInAliasData(alias, id)) return;
+      console.log('is valid id');
+      setEditItemId(id);
+      setTempEditAliasItem(alias[id]);
+      setIsEditAliasItem(true);
+    },
+    [alias]
+  );
+
   const changeAliasInput = useCallback(
     (
       evt: React.ChangeEvent<HTMLInputElement>,
       id: number,
       type: 'name' | 'value'
     ): void => {
-      // 変更するAliasのインデックスを配列から特定する
-      const aliasIndex: number = findAliasIndex(id);
-      // 変更するAliasが見つからなかったら何も変更しない
-      if (isUndefinedOrNull<number>(aliasIndex)) return;
-
-      // Aliasを新しい配列にして、Aliasを変更する
-      const newAlias = alias.concat();
+      console.log(tempEditAliasItem);
+      const newTempEditAliasItem = JSON.parse(
+        JSON.stringify(tempEditAliasItem)
+      );
+      console.log(newTempEditAliasItem);
       if (type === 'name') {
-        newAlias[aliasIndex].name = evt.target.value;
+        newTempEditAliasItem.name = evt.target.value;
       } else {
-        newAlias[aliasIndex].value = evt.target.value;
+        newTempEditAliasItem.value = evt.target.value;
       }
-      setAlias(newAlias);
+      setTempEditAliasItem(newTempEditAliasItem);
+
+      // // 変更するAliasのインデックスを配列から特定する
+      // const aliasIndex: number = findAliasIndex(id);
+      // // 変更するAliasが見つからなかったら何も変更しない
+      // if (isUndefinedOrNull<number>(aliasIndex)) return;
+
+      // // Aliasを新しい配列にして、Aliasを変更する
+      // const newAlias = alias.concat();
+      // if (type === 'name') {
+      //   newAlias[aliasIndex].name = evt.target.value;
+      // } else {
+      //   newAlias[aliasIndex].value = evt.target.value;
+      // }
+      // setAlias(newAlias);
     },
-    [alias, findAliasIndex]
+    [tempEditAliasItem]
   );
 
   const changeEditItemId = useCallback(
@@ -143,71 +174,117 @@ const SettingView = React.memo(() => {
     []
   );
 
-  const saveAliasItem = useCallback(
-    async (evt: React.FocusEvent): Promise<void> => {
-      evt.preventDefault();
+  const saveAlias = useCallback(
+    async (newAlias: AliasData): Promise<boolean> => {
+      return await window.ipcApi.handleSaveAliasData(newAlias);
     },
     []
   );
 
-  const saveAlias = useCallback(
-    async (evt: React.FormEvent): Promise<void> => {
-      console.log(alias);
+  const saveAliasItem = useCallback(
+    async (evt: React.MouseEvent<HTMLElement>, id: Id): Promise<void> => {
       evt.preventDefault();
-      const result = await window.ipcApi.handleSaveAliasData(alias);
-      if (result) {
-        addEmptyAliasItem(alias);
-      }
+      // // 変更するAliasのインデックスを配列から特定する
+      const aliasIndex: number = findAliasIndex(id);
+      // // 変更するAliasが見つからなかったら何も変更しない
+      if (isUndefinedOrNull<number>(aliasIndex)) return;
+
+      // // Aliasを新しい配列にして、Aliasを変更する
+      const newAlias = alias.concat();
+      newAlias[aliasIndex] = tempEditAliasItem;
+      setAlias(newAlias);
+
+      const result = await saveAlias(newAlias);
+      console.log(result);
+
+      closeEditAliasWindow(evt);
     },
-    [alias, addEmptyAliasItem]
+    [alias, findAliasIndex, tempEditAliasItem, saveAlias]
   );
 
   const viewAliasData = useMemo((): JSX.Element | '' => {
     if (alias.length === 0) return '';
     const aliasData = alias.map((item: AliasItem) => {
       return (
-        <AliasData
+        <ViewAliasData
           key={item.id}
           aliasItem={item}
-          changeAliasInput={changeAliasInput}
+          selectAliasItem={selectAliasItem}
         />
       );
     });
     const aliasLayout = (
-      <form onSubmit={saveAlias}>
-        {aliasData}
-        <button type="submit">保存</button>
-      </form>
+      // <form onSubmit={saveAlias}>
+      //   {aliasData}
+      //   <button type="submit">保存</button>
+      // </form>
+      <div className={styles.layoutContainer}>{aliasData}</div>
     );
     return aliasLayout;
-  }, [alias, changeAliasInput, saveAlias]);
+  }, [alias, selectAliasItem]);
+
+  const closeEditAliasWindow = (e: React.MouseEvent<HTMLElement>): void => {
+    e.preventDefault();
+    setEditItemId(-1);
+    setTempEditAliasItem(tempAliasItem);
+    setIsEditAliasItem(false);
+  };
+
+  const viewEditAliasWindow = useMemo((): JSX.Element | null => {
+    if (
+      !alias ||
+      !isEditAliasItem ||
+      editItemId < 0 ||
+      tempEditAliasItem.id < 0
+    ) {
+      return null;
+    }
+    return (
+      <AliasData
+        aliasItem={tempEditAliasItem}
+        changeAliasInput={changeAliasInput}
+        closeEditAliasWindow={closeEditAliasWindow}
+        saveAliasItem={saveAliasItem}
+      />
+    );
+  }, [
+    alias,
+    isEditAliasItem,
+    editItemId,
+    tempEditAliasItem,
+    changeAliasInput,
+    saveAliasItem,
+  ]);
 
   console.log('globalShortcutStatus: ' + globalShortcutStatus);
   return (
-    <div className={styles.height100}>
-      <input
-        className={`${styles.width100}`}
-        onKeyDown={(e) => keyDownAction(e)}
-        onBlur={(e) => saveGlobalShortCut(e)}
-        readOnly={true}
-        value={visualKeys}
-      />
-      <input type="button" onClick={resetKeys} value={'Clear'} />
-      {globalShortcutStatus ? (
-        <span>{globalShortCutRegisterResult[globalShortcutStatus].text}</span>
-      ) : null}
-      {viewAliasData}
-      {/* {message && <p>{message}</p>}
-
-      <form className={styles.height100} onSubmit={handleSubmit}>
+    <>
+      {viewEditAliasWindow}
+      <div className={styles.height100}>
         <input
-          className={`${styles.height100} ${styles.width100} ${styles.font}`}
-          type="text"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
+          className={`${styles.width100}`}
+          onKeyDown={(e) => keyDownAction(e)}
+          onBlur={(e) => saveGlobalShortCut(e)}
+          readOnly={true}
+          value={visualKeys}
         />
-      </form> */}
-    </div>
+        <input type="button" onClick={resetKeys} value={'Clear'} />
+        {globalShortcutStatus ? (
+          <span>{globalShortCutRegisterResult[globalShortcutStatus].text}</span>
+        ) : null}
+        {viewAliasData}
+        {/* {message && <p>{message}</p>}
+
+        <form className={styles.height100} onSubmit={handleSubmit}>
+          <input
+            className={`${styles.height100} ${styles.width100} ${styles.font}`}
+            type="text"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+          />
+        </form> */}
+      </div>
+    </>
   );
 });
 

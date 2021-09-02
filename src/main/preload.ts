@@ -21,8 +21,8 @@ contextBridge.exposeInMainWorld('ipcApi', {
   handleGetAliasData: async () => {
     return await ipcRenderer.invoke('getAliasData');
   },
-  handleSaveAliasData: async (aliasData: AliasData): Promise<boolean> => {
-    return await ipcRenderer.invoke('saveAliasData', aliasData);
+  handleSaveAliasData: async (newAliasData: AliasData): Promise<boolean> => {
+    return await ipcRenderer.invoke('saveAliasData', newAliasData);
   },
   handleExecAlias: async (command: string) => {
     return await ipcRenderer.invoke('execAlias', command);

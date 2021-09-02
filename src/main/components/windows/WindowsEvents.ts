@@ -4,7 +4,7 @@ import {
   renderSettingWindow,
   closeSettingWindow,
 } from './Windows';
-import { isDev } from '../../../lib/Const';
+import { isDev } from '@/lib/Compile';
 
 const mainWindowsEvents = (): void => {
   mainWindow.on('blur', () => {

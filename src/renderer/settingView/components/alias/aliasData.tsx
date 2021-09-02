@@ -12,18 +12,32 @@ interface Props {
     id: number,
     type: 'name' | 'value'
   ) => void;
+  closeEditAliasWindow: (e: React.MouseEvent<HTMLElement>) => void;
+  saveAliasItem: (e: React.MouseEvent<HTMLElement>, id: Id) => void;
 }
 
 const AliasData: React.FC<Props> = React.memo(
-  ({ aliasItem, changeAliasInput }) => {
+  ({ aliasItem, changeAliasInput, closeEditAliasWindow, saveAliasItem }) => {
     return (
-      <div id={aliasItem.id.toString()} className={styles.layout}>
-        <AliasName aliasItem={aliasItem} changeAliasName={changeAliasInput} />
-        <AliasCommand
-          aliasItem={aliasItem}
-          changeAliasCommand={changeAliasInput}
-        />
-      </div>
+      <>
+        <div className={styles.modalLayout}>
+          <div id={aliasItem.id.toString()} className={styles.aliasArea}>
+            <AliasName
+              aliasItem={aliasItem}
+              changeAliasName={changeAliasInput}
+            />
+            <AliasCommand
+              aliasItem={aliasItem}
+              changeAliasCommand={changeAliasInput}
+            />
+          </div>
+          <button onClick={closeEditAliasWindow}>閉じる</button>
+          <button onClick={(e) => saveAliasItem(e, aliasItem.id)}>保存</button>
+        </div>
+        <div
+          className={styles.modalLayoutBg}
+          onClick={closeEditAliasWindow}></div>
+      </>
     );
   }
 );

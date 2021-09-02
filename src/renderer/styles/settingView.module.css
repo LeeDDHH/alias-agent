@@ -1,9 +1,44 @@
+:root {
+  --width-100: 100%;
+  --height-100: 100%;
+  --layoutContainer-width: 94%;
+  --layoutContainer-height: 70%;
+  --modalLayoutBg-z-index: 10;
+  --modalLayout-width: 80%;
+  --modalLayout-height: 80%;
+  --modalLayout-z-index: 20;
+  --aliasArea-height: 80%;
+  --default-border-set: 1px solid black;
+}
+
+/* ::-webkit-scrollbar {
+  display: none;
+} */
+
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
+}
+
+::-webkit-scrollbar-thumb:window-inactive {
+  display: none;
+}
+
 .height100 {
-  height: 100%;
+  height: var(--height-100);
 }
 
 .width100 {
-  width: 100%;
+  width: var(--width-100);
 }
 
 .inputBox {
@@ -13,6 +48,74 @@
   outline: none;
 }
 
+.layoutContainer {
+  width: var(--layoutContainer-width);
+  margin: 0 auto;
+  margin-top: 30px;
+  height: var(--layoutContainer-height);
+  overflow-y: scroll;
+}
+
 .layout {
+  display: grid;
+  grid-template-columns: 100px 1fr;
+}
+
+.layout > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  border: var(--default-border-set);
+  border-bottom: none;
+  text-indent: 5px;
+}
+
+.layoutContainer > .layout:last-child > span {
+  border-bottom: var(--default-border-set);
+}
+
+.layout > span:nth-child(2) {
+  border-left: none;
+}
+
+.modalLayoutBg {
   display: flex;
+  justify-content: center;
+  align-items: center;
+  width: var(--width-100);
+  height: var(--height-100);
+  background-color: rgba(0, 0, 0, 0.5);
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: var(--modalLayoutBg-z-index);
+}
+
+.modalLayout {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: var(--modalLayout-width);
+  height: var(--modalLayout-height);
+  background-color: white;
+  z-index: var(--modalLayout-z-index);
+  position: fixed;
+  top: calc((var(--height-100) - var(--modalLayout-width)) / 2);
+  left: calc((var(--width-100) - var(--modalLayout-height)) / 2);
+}
+
+.aliasArea {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: var(--width-100);
+  height: var(--aliasArea-height);
+}
+
+.aliasArea > input {
+  width: 80%;
+  height: 35px;
+  background-color: white;
 }

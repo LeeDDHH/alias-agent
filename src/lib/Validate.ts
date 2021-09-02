@@ -33,7 +33,7 @@ const _aliasItemDataSchema: JSONSchemaType<AliasData> = {
   },
 };
 
-const validateAliasData = (data: AliasData) => {
+const validateAliasData = (data: AliasData): boolean => {
   const ajv = new Ajv();
 
   const validate = ajv
@@ -42,4 +42,10 @@ const validateAliasData = (data: AliasData) => {
   return validate(data) ? true : false;
 };
 
-export { validateAliasData };
+const isIdInAliasData = (data: AliasData, id: Id): boolean => {
+  return data.some((dat: AliasItem) => {
+    return dat.id === id;
+  });
+};
+
+export { validateAliasData, isIdInAliasData };
